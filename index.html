@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Skywell ติดตามแบตเตอรี่แพค</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#17242d;--mute:#5d6e78;--paper:#eef2f1;--card:#fff;--line:#d3dcdd;--ok:#2c8a5a;--wip:#d38a12;--sk:#1f64a8;--bad:#b4402f;
+--okbg:#e2f1e8;--wipbg:#fbefd5}
+@media(prefers-color-scheme:dark){:root{--ink:#e6eef0;--mute:#9fb0b8;--paper:#11191e;--card:#1a252c;--line:#2c3b44;--ok:#4fc28a;--wip:#ecaa3a;--sk:#6bb0ee;--bad:#e8806e;--okbg:#17352a;--wipbg:#3b2f14}}
+*{box-sizing:border-box}
+html{scroll-padding-top:70px}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 16px/1.55 "IBM Plex Sans Thai",system-ui,sans-serif}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--sk);outline-offset:2px}
+header{position:sticky;top:0;z-index:5;background:var(--ink);color:var(--paper);display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center;padding:10px 20px}
+header h1{font-size:1.05rem;margin:0;font-weight:600}
+header nav{display:flex;gap:4px}
+header nav a{padding:6px 12px;border-radius:6px;text-decoration:none;color:inherit;opacity:.8}
+header nav a[aria-current]{background:rgba(255,255,255,.16);opacity:1}
+header input{margin-left:auto;min-width:180px;padding:7px 10px;border-radius:6px;border:0;font:inherit;background:#fff;color:#17242d}
+main{max-width:1080px;margin:0 auto;padding:22px 20px 60px}
+h2{font-size:1.5rem;margin:0 0 4px;font-weight:600}
+h3{font-size:1rem;margin:26px 0 8px;font-weight:600}
+.sub{color:var(--mute);margin:0 0 20px}
+.mute{color:var(--mute)}
+.crumb{font-size:.9rem;margin-bottom:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.car{display:block;background:var(--card);border:1px solid var(--line);border-left:5px solid var(--ok);border-radius:8px;padding:12px 14px;text-decoration:none}
+.car.wip{border-left-color:var(--wip)}
+.car:hover{border-color:var(--sk)}
+.ch{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.ch b{font-size:1.15rem;font-weight:600}
+.chip{font-size:.78rem;padding:1px 9px;border-radius:99px;background:var(--okbg);color:var(--ok);font-weight:500}
+.chip.wip{background:var(--wipbg);color:var(--wip)}
+.strip{display:grid;grid-template-columns:repeat(12,1fr);gap:3px}
+.strip i{height:22px;border-radius:2px;background:var(--ok)}
+.strip i.wip{background:var(--wip)}
+.strip i.empty,.slot.empty{background:repeating-linear-gradient(135deg,transparent 0 4px,var(--line) 4px 6px);border:1px dashed var(--bad)}
+.strip i.sk{box-shadow:inset 0 -6px 0 var(--sk)}
+.cf{font-size:.85rem;color:var(--mute);margin-top:8px}
+.rack{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+.slot{display:block;border-radius:8px;padding:12px 10px;min-height:92px;text-decoration:none;background:var(--okbg);border:1px solid var(--ok);color:var(--ink)}
+.slot.wip{background:var(--wipbg);border-color:var(--wip)}
+.slot .n{font-size:.8rem;color:var(--mute)}
+.slot .l{font-size:1.2rem;font-weight:600;margin-top:6px}
+.slot.sk{box-shadow:inset 0 -6px 0 var(--sk)}
+.slot.sk .l{color:var(--sk)}
+.slot.empty .l{color:var(--bad);font-size:1rem}
+a.slot:hover{outline:2px solid var(--sk)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.85rem;color:var(--mute);margin:12px 0 0}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:2px;vertical-align:-1px;margin-right:5px}
+.todo{background:var(--card);border:1px solid var(--line);border-radius:8px}
+.todo a{display:flex;flex-wrap:wrap;gap:4px 14px;padding:10px 14px;text-decoration:none;border-top:1px solid var(--line)}
+.todo a:first-child{border-top:0}
+.todo a:hover{background:var(--paper)}
+.todo b{color:var(--sk);min-width:56px}
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+th,td{text-align:left;padding:9px 12px;border-top:1px solid var(--line);font-size:.95rem}
+th{font-weight:500;color:var(--mute);border-top:0;background:var(--paper)}
+.wrap{overflow-x:auto}
+.filters{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.filters a{padding:5px 14px;border:1px solid var(--line);border-radius:99px;text-decoration:none;background:var(--card)}
+.filters a[aria-current]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.round{background:var(--card);border:1px solid var(--line);border-radius:8px;margin-bottom:14px;overflow:hidden}
+.round>h4{margin:0;padding:8px 14px;font-size:.95rem;background:var(--paper);font-weight:600}
+.cols{display:grid;grid-template-columns:repeat(3,1fr)}
+.cols>div{padding:12px 14px;border-left:1px solid var(--line)}
+.cols>div:first-child{border-left:0}
+.cols h5{margin:0 0 6px;font-size:.9rem;font-weight:600}
+dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:3px 12px;font-size:.93rem}
+dt{color:var(--mute)}dd{margin:0}
+.ok{color:var(--ok);font-weight:500}.wipc{color:var(--wip);font-weight:500}
+.unc{color:var(--mute)}
+.log{list-style:none;padding:0;margin:0}
+.log li{padding:8px 0;border-top:1px solid var(--line)}
+.log li:first-child{border-top:0}
+footer{color:var(--mute);font-size:.85rem;margin-top:36px}
+@media(max-width:720px){.rack{grid-template-columns:repeat(3,1fr)}.cols{grid-template-columns:1fr}.cols>div{border-left:0;border-top:1px solid var(--line)}.cols>div:first-child{border-top:0}header input{margin-left:0;width:100%}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Skywell แบตเตอรี่แพค</h1>
+  <nav aria-label="เมนูหลัก"><a href="#/" id="n-home">ฟลีต</a><a href="#/packs" id="n-packs">แพค SK ทั้งหมด</a></nav>
+  <input id="q" list="sklist" placeholder="ค้นหา SK เช่น SK-01" aria-label="ค้นหาแพค SK">
+  <datalist id="sklist"></datalist>
+</header>
+<main id="app"></main>
+
+<script>
+/* ข้อมูลตัวอย่างจากไฟล์ skywell_battery_monitor.xlsx
+   ขั้นต่อไปจะเปลี่ยนส่วนนี้เป็นการอ่านจาก Google Sheets หรือไฟล์ data.json */
+const D={
+ updated:"2026-10-08",
+ cars:["08-178","08-189","08-190","08-191","08-192","08-193","08-194","08-195","08-196","08-197","08-198"],
+ wip:{"08-192":[4,5,6],"08-194":[1,2,3]},   // ช่องที่ตั้งสถานะ "กำลังดำเนินการ" (กรอกเองจากหน้า 1)
+ rounds:[
+  {sk:"SK-01",n:1,from:"08-192",fromPack:4,date:"2026-10-06",meter:null,symptom:"Vdiff",cd:"ผ่าน",soh:90,ah:207,bal:"ผ่าน",to:"08-194",toPack:1,toDate:null,toMeter:null,link:""},
+  {sk:"SK-02",n:1,from:"08-192",fromPack:5,date:"2026-10-06",meter:null,symptom:"Vdiff",cd:"ผ่าน",soh:90,ah:207,bal:"ผ่าน",to:"08-194",toPack:2,toDate:null,toMeter:null,link:""},
+  {sk:"SK-03",n:1,from:"08-192",fromPack:6,date:"2026-10-06",meter:null,symptom:"Vdiff",cd:"ผ่าน",soh:90,ah:207,bal:"ผ่าน",to:"08-194",toPack:3,toDate:null,toMeter:null,link:""},
+  {sk:"SK-04",n:1,from:"08-194",fromPack:1,date:"2026-10-06",meter:null,symptom:"Vdiff",cd:"กำลังดำเนินการ",soh:90,ah:207,bal:"รอดำเนินการ",to:"",toPack:null,toDate:null,toMeter:null,link:""},
+  {sk:"SK-05",n:1,from:"08-194",fromPack:2,date:"2026-10-06",meter:null,symptom:"Vdiff",cd:"ผ่าน",soh:90,ah:207,bal:"รอดำเนินการ",to:"",toPack:null,toDate:null,toMeter:null,link:""},
+  {sk:"SK-06",n:1,from:"08-194",fromPack:3,date:"2026-10-06",meter:null,symptom:"Vdiff",cd:"ผ่าน",soh:90,ah:207,bal:"รอดำเนินการ",to:"",toPack:null,toDate:null,toMeter:null,link:""}
+ ]};
+
+const $=s=>document.querySelector(s), esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const fd=d=>d?d.split("-").reverse().join("/"):"—", fm=m=>m==null||m===""?"—":Number(m).toLocaleString("en");
+const tc=v=>v==="ผ่าน"?"ok":v?"wipc":"mute";
+
+/* คำนวณว่าตอนนี้แต่ละช่องมีแพคอะไร จากประวัติการถอด/ติดตั้งทั้งหมด */
+function slots(){
+ const S={};D.cars.forEach(c=>S[c]=Array(12).fill("เดิม"));
+ const ev=[];
+ D.rounds.forEach(r=>{ev.push({t:0,d:r.date,r});if(r.to)ev.push({t:1,d:r.toDate||r.date,r});});
+ ev.sort((a,b)=>a.d.localeCompare(b.d)||a.t-b.t||a.r.sk.localeCompare(b.r.sk));
+ ev.forEach(e=>{const r=e.r,c=e.t===0?r.from:r.to,p=(e.t===0?r.fromPack:r.toPack)-1;if(S[c]&&p>=0&&p<12)S[c][p]=e.t===0?null:r.sk;});
+ return S;
+}
+const last=sk=>D.rounds.filter(r=>r.sk===sk).sort((a,b)=>a.n-b.n).pop();
+const sks=()=>[...new Set(D.rounds.map(r=>r.sk))].sort();
+const isWip=(c,i)=>(D.wip[c]||[]).includes(i+1);
+const cls=(c,i,x)=>x===null?"empty":(isWip(c,i)?"wip":"ok")+(x!=="เดิม"?" sk":"");
+const carState=(S,c)=>S[c].some((x,i)=>x===null||isWip(c,i))?"wip":"ok";
+const stText=s=>s==="ok"?"ปกติ":"กำลังดำเนินการ";
+
+const V={
+home(){
+ const S=slots();let k=0,e=0;
+ const cards=D.cars.map(c=>{
+  const s=S[c],ee=s.filter(x=>x===null).length,kk=s.filter(x=>x&&x!=="เดิม").length,st=carState(S,c);k+=kk;e+=ee;
+  return `<a class="car ${st}" href="#/car/${c}"><div class="ch"><b>${c}</b><span class="chip ${st}">${stText(st)}</span></div>
+  <div class="strip" aria-hidden="true">${s.map((x,i)=>`<i class="${cls(c,i,x)}"></i>`).join("")}</div>
+  <div class="cf">${kk?`ใช้แพค SK ${kk} ช่อง`:"แพคเดิมทั้งหมด"}${ee?`, ว่าง ${ee} ช่อง`:""}</div></a>`}).join("");
+ const wait=sks().map(last).filter(r=>!r.to);
+ const todo=wait.length?`<h3>แพค SK ที่รอติดตั้ง (${wait.length})</h3><div class="todo">${wait.map(r=>{
+  const p=[];if(r.cd!=="ผ่าน")p.push("ทดสอบ: "+r.cd);if(r.bal!=="ผ่าน")p.push("balancing: "+(r.bal||"ยังไม่ระบุ"));
+  return `<a href="#/pack/${r.sk}"><b>${r.sk}</b><span>ถอดจาก ${r.from} pack ${r.fromPack}</span><span class="${p.length?"wipc":"ok"}">${p.length?p.join(", "):"พร้อมติดตั้ง"}</span></a>`}).join("")}</div>`:"";
+ return `<h2>ภาพรวมฟลีต</h2><p class="sub">${D.cars.length} คัน, ใช้แพค SK ${k} ช่อง, ช่องว่าง ${e} ช่อง, แพค SK รอติดตั้ง ${wait.length} แพค</p>
+ <div class="grid">${cards}</div>${legend()}${todo}`;
+},
+car(id){
+ const S=slots();if(!S[id])return V.nf();
+ const st=carState(S,id);
+ const rack=S[id].map((x,i)=>{
+  const c=cls(id,i,x),inner=`<div class="n">pack ${i+1}</div><div class="l">${x===null?"ว่าง (ถอดออก)":x==="เดิม"?"แพคเดิม":x}</div>`;
+  return x&&x!=="เดิม"?`<a class="slot ${c}" href="#/pack/${x}">${inner}</a>`:`<div class="slot ${c}">${inner}</div>`}).join("");
+ const log=[];
+ D.rounds.forEach(r=>{
+  if(r.from===id)log.push({d:r.date,t:0,h:`ถอดแพคจาก pack ${r.fromPack} → <a href="#/pack/${r.sk}">${r.sk}</a>, อาการ ${esc(r.symptom)}`});
+  if(r.to===id)log.push({d:r.toDate||r.date,t:1,h:`ติดตั้ง <a href="#/pack/${r.sk}">${r.sk}</a> ที่ pack ${r.toPack}`});});
+ log.sort((a,b)=>b.d.localeCompare(a.d)||b.t-a.t);
+ return `<div class="crumb"><a href="#/">ฟลีต</a> / ${id}</div>
+ <h2>${id} <span class="chip ${st}">${stText(st)}</span></h2><p class="sub">ตำแหน่งแพคทั้ง 12 ช่อง ณ ตอนนี้ (กดที่แพค SK เพื่อดูประวัติ)</p>
+ <div class="rack">${rack}</div>${legend()}
+ <h3>ประวัติของคันนี้</h3>${log.length?`<ul class="log">${log.map(l=>`<li><span class="mute">${fd(l.d)}</span> &nbsp;${l.h}</li>`).join("")}</ul>`:'<p class="mute">ยังไม่เคยถอดหรือเปลี่ยนแพค</p>'}`;
+},
+pack(sk){
+ const rs=D.rounds.filter(r=>r.sk===sk).sort((a,b)=>b.n-a.n);if(!rs.length)return V.nf();
+ const l=rs[0],where=l.to?`ติดตั้งอยู่ที่ <a href="#/car/${l.to}">${l.to}</a> pack ${l.toPack}`:"อยู่นอกรถ รอติดตั้ง";
+ return `<div class="crumb"><a href="#/packs">แพค SK ทั้งหมด</a> / ${sk}</div><h2>${sk}</h2><p class="sub">ตอนนี้: ${where}</p>`+rs.map(r=>{
+  const u=r.cd==="ผ่าน"?"":" unc";
+  return `<section class="round"><h4>รอบที่ ${r.n}</h4><div class="cols">
+  <div><h5>ถอดออก</h5><dl><dt>จากรถ</dt><dd><a href="#/car/${r.from}">${r.from}</a>, pack ${r.fromPack}</dd><dt>วันที่</dt><dd>${fd(r.date)}</dd><dt>มิเตอร์</dt><dd>${fm(r.meter)}</dd><dt>อาการ</dt><dd>${esc(r.symptom)||"—"}</dd></dl></div>
+  <div><h5>ทดสอบ</h5><dl><dt>Charge/discharge</dt><dd class="${tc(r.cd)}">${esc(r.cd)||"—"}</dd><dt>SOH</dt><dd class="${u}">${r.soh==null?"รอผล":r.soh+"%"}${u&&r.soh!=null?" (ยังไม่ยืนยัน)":""}</dd><dt>Capacity</dt><dd class="${u}">${r.ah==null?"รอผล":r.ah+" Ah"}</dd><dt>Balancing</dt><dd class="${tc(r.bal)}">${esc(r.bal)||"—"}</dd><dt>ไฟล์</dt><dd>${r.link?`<a href="${esc(r.link)}" target="_blank" rel="noopener">เปิดผลทดสอบ</a>`:'<span class="mute">ยังไม่มีไฟล์</span>'}</dd></dl></div>
+  <div><h5>ติดตั้งกลับ</h5>${r.to?`<dl><dt>ที่รถ</dt><dd><a href="#/car/${r.to}">${r.to}</a>, pack ${r.toPack}</dd><dt>วันที่</dt><dd>${fd(r.toDate)}</dd><dt>มิเตอร์</dt><dd>${fm(r.toMeter)}</dd></dl>`:'<p class="mute" style="margin:0">ยังไม่ได้ติดตั้ง</p>'}</div>
+  </div></section>`}).join("");
+},
+packs(f){
+ const rows=sks().map(last).filter(r=>f==="car"?r.to:f==="wait"?!r.to:true);
+ const fl=[["all","ทั้งหมด"],["car","อยู่บนรถ"],["wait","รอติดตั้ง"]].map(([k,t])=>`<a href="#/packs/${k}" ${(f||"all")===k?"aria-current=page":""}>${t}</a>`).join("");
+ return `<h2>แพค SK ทั้งหมด</h2><p class="sub">${sks().length} แพค</p><div class="filters">${fl}</div><div class="wrap"><table><thead><tr><th>SK</th><th>ตอนนี้อยู่ที่</th><th>ถอดจาก</th><th>SOH</th><th>Capacity</th><th>ทดสอบ</th><th>Balancing</th></tr></thead><tbody>${rows.map(r=>`<tr>
+ <td><a href="#/pack/${r.sk}"><b>${r.sk}</b></a></td><td>${r.to?`<a href="#/car/${r.to}">${r.to}</a> pack ${r.toPack}`:'<span class="wipc">รอติดตั้ง</span>'}</td><td>${r.from} pack ${r.fromPack}</td>
+ <td class="${r.cd==="ผ่าน"?"":"unc"}">${r.soh==null?"—":r.soh+"%"}</td><td class="${r.cd==="ผ่าน"?"":"unc"}">${r.ah==null?"—":r.ah+" Ah"}</td><td class="${tc(r.cd)}">${esc(r.cd)||"—"}</td><td class="${tc(r.bal)}">${esc(r.bal)||"—"}</td></tr>`).join("")}</tbody></table></div>`;
+},
+nf(){return `<h2>ไม่พบข้อมูล</h2><p class="sub">ลองกลับไปที่ <a href="#/">หน้าฟลีต</a> หรือค้นหาเลข SK ด้านบน</p>`}
+};
+const legend=()=>`<p class="legend"><span><i style="background:var(--ok)"></i>ปกติ</span><span><i style="background:var(--wip)"></i>กำลังดำเนินการ</span><span><i style="background:var(--sk)"></i>เป็นแพค SK (ถอดมาแล้วติดตั้งกลับ)</span><span><i style="border:1px dashed var(--bad)"></i>ช่องว่าง</span></p>`;
+
+function route(){
+ const [p,a]=location.hash.replace(/^#\/?/,"").split("/").slice(0,2);
+ $("#app").innerHTML=p==="car"?V.car(a):p==="pack"?V.pack(a):p==="packs"?V.packs(a):V.home();
+ if(loadErr)$("#app").insertAdjacentHTML("afterbegin",'<p class="wipc">โหลดข้อมูลจาก Google Sheets ไม่ได้ ตรวจว่าชีตตั้ง Share เป็น Anyone with the link และมีแท็บ rounds กับ slots ตอนนี้แสดงข้อมูลตัวอย่าง</p>');
+ $("#app").insertAdjacentHTML("beforeend",`<footer>${SHEET_ID&&!loadErr?"โหลดจาก Google Sheets เมื่อ":"ข้อมูลตัวอย่าง อัปเดต"} ${fd(D.updated)}</footer>`);
+ document.querySelectorAll("header nav a").forEach(x=>x.removeAttribute("aria-current"));
+ const n=$(p==="packs"||p==="pack"?"#n-packs":"#n-home");n.setAttribute("aria-current","page");scrollTo(0,0);
+}
+$("#sklist").innerHTML=sks().map(s=>`<option value="${s}">`).join("");
+$("#q").addEventListener("keydown",e=>{if(e.key!=="Enter")return;
+ const v=e.target.value.trim().toUpperCase().replace(/^SK-?(\d+)$/,(m,d)=>"SK-"+d.padStart(2,"0"));
+ location.hash=sks().includes(v)?"#/pack/"+v:"#/packs";e.target.value="";});
+/* ---- โหลดข้อมูลจาก Google Sheets ----
+   วาง ID ของชีตระหว่าง "" ด้านล่าง (ข้อความยาวใน URL ระหว่าง /d/ กับ /edit)
+   ชีตต้องตั้ง Share เป็น "Anyone with the link: Viewer" และมีแท็บชื่อ rounds กับ slots
+   ถ้าเว้นว่าง เว็บจะแสดงข้อมูลตัวอย่างด้านบน */
+const SHEET_ID="";
+const csvUrl=t=>`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${t}`;
+function parseCSV(t){const rows=[];let r=[],c="",q=false;
+ for(let i=0;i<t.length;i++){const ch=t[i];
+  if(q){if(ch==='"'){if(t[i+1]==='"'){c+='"';i++}else q=false}else c+=ch}
+  else if(ch==='"')q=true;else if(ch===","){r.push(c);c=""}
+  else if(ch==="\n"||ch==="\r"){if(ch==="\r"&&t[i+1]==="\n")i++;r.push(c);rows.push(r);r=[];c=""}else c+=ch}
+ if(c||r.length){r.push(c);rows.push(r)}return rows}
+const iso=s=>{s=(s||"").trim();let m;
+ if(m=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/))return`${m[1]}-${m[2].padStart(2,"0")}-${m[3].padStart(2,"0")}`;
+ if(m=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/))return`${m[3]}-${m[2].padStart(2,"0")}-${m[1].padStart(2,"0")}`;return null};
+const num=s=>{const m=String(s??"").replace(/,/g,"").match(/-?\d+(\.\d+)?/);return m?Number(m[0]):null};
+const pct=s=>{const v=num(s);return v!=null&&v>0&&v<=1?Math.round(v*1000)/10:v};
+let loadErr=false;
+async function load(){
+ if(!SHEET_ID)return;
+ $("#app").innerHTML='<p class="mute">กำลังโหลดข้อมูลจาก Google Sheets…</p>';
+ try{
+  const [a,b]=await Promise.all(["rounds","slots"].map(t=>fetch(csvUrl(t)).then(r=>{if(!r.ok)throw new Error(t);return r.text()})));
+  D.rounds=parseCSV(a).slice(1).filter(r=>(r[0]||"").trim()).map(r=>({
+   sk:r[0].trim().toUpperCase(),n:num(r[1])||1,from:(r[2]||"").trim(),fromPack:num(r[3]),date:iso(r[4])||"",meter:num(r[5]),symptom:(r[6]||"").trim(),
+   cd:(r[7]||"").trim(),soh:pct(r[8]),ah:num(r[9]),bal:(r[10]||"").trim(),to:(r[11]||"").trim(),toPack:num(r[12]),toDate:iso(r[13]),toMeter:num(r[14]),link:(r[15]||"").trim()}));
+  D.wip={};parseCSV(b).slice(1).forEach(r=>{if(r[0]&&/กำลัง/.test(r[2]||""))(D.wip[r[0].trim()]=D.wip[r[0].trim()]||[]).push(num(r[1]))});
+  D.updated=new Date().toISOString().slice(0,10);
+ }catch(e){loadErr=true}
+}
+addEventListener("hashchange",route);
+load().then(route);
+</script>
+</body>
+</html>
