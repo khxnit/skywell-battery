@@ -57,20 +57,33 @@ h3{font-size:1rem;margin:26px 0 8px;font-weight:600}
 .slot.sk .l{color:var(--sk)}
 .slot.empty .l{color:var(--bad);font-size:1rem}
 a.slot:hover{outline:2px solid var(--sk)}
-.racks{display:flex;flex-wrap:wrap;gap:14px}
-.racks figure{margin:0;flex:1 1 280px;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 10px 6px}
-.racks svg{display:block;width:100%;height:auto;max-height:280px}
-.racks figcaption{font-size:.85rem;color:var(--mute)}
-.pk .f{stroke:rgba(0,0,0,.5);stroke-width:1;stroke-linejoin:round}
-.pk.ok .t{fill:#7fcda5}.pk.ok .r{fill:#47a679}.pk.ok .l{fill:#2f8b5f}
-.pk.wip .t{fill:#f4cb78}.pk.wip .r{fill:#dc9c33}.pk.wip .l{fill:#bd7f1a}
-.pk.empty .f{fill:rgba(180,64,47,.08);stroke:var(--bad);stroke-dasharray:4 3}
-.pk.sk .f{stroke:var(--sk);stroke-width:2.2}
+.plan{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:10px}
+.plan svg{display:block;width:100%;max-width:400px;margin:0 auto;height:auto}
+.tk{fill:none;stroke:var(--mute);stroke-opacity:.5;stroke-width:1.6}
+.tk .d{stroke-dasharray:5 4;stroke-opacity:.4}
+.tl text{font-size:10px;fill:var(--mute);text-anchor:middle;opacity:.9}
+.pk .f{stroke:rgba(0,0,0,.55);stroke-width:1.2}
+.pk.ok .f{fill:#7fcda5}.pk.wip .f{fill:#f4cb78}
+.pk.empty .f{fill:rgba(180,64,47,.1);stroke:var(--bad);stroke-dasharray:4 3}
+.pk.sk .f{stroke:var(--sk);stroke-width:2.6}
 .pk text{text-anchor:middle;fill:#12232c;pointer-events:none}
-.pk .n{font-size:15px;font-weight:600}.pk .s{font-size:10.5px}
+.pk .n{font-size:16px;font-weight:600}.pk .s{font-size:10.5px}
 .pk.sk .s{font-weight:600;fill:#0f3d73}
 .pk.empty text{fill:var(--bad)}
-a:hover .pk .f{stroke-width:3}
+a:hover .pk .f{stroke-width:3.4}
+.cl{display:grid;grid-template-columns:minmax(0,1fr);gap:8px}
+.vt{display:flex;gap:6px;margin-bottom:8px}
+.bt{font:inherit;padding:5px 14px;border:1px solid var(--line);border-radius:99px;background:var(--card);color:var(--ink);cursor:pointer}
+.vw[data-v="3d"] .bt[data-m="3d"],.vw[data-v="top"] .bt[data-m="top"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.vw[data-v="3d"] .plan,.vw[data-v="top"] .iso{display:none}
+.iso{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px;overflow-x:auto}
+.iso svg{display:block;min-width:640px;width:100%;max-width:880px;height:auto;margin:0 auto}
+.tk polyline{fill:none}.tk .d{stroke-dasharray:5 4;stroke-opacity:.45}.tk .cy{stroke-width:5;stroke-linecap:round;stroke-opacity:.35}
+.pk.ok .f.t{fill:#8fd8b3}.pk.ok .f.l{fill:#56b588}.pk.ok .f.r{fill:#37946a}
+.pk.wip .f.t{fill:#f8d68d}.pk.wip .f.l{fill:#e8ad48}.pk.wip .f.r{fill:#c98a22}
+.pk .n3{font-size:17px;font-weight:700}.pk .s3{font-size:11px;font-weight:600}
+.pill{fill:#fff;stroke:var(--sk);stroke-width:1.2}
+.pk .pt{font-size:10px;font-weight:700;fill:#0f3d73}
 .legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.85rem;color:var(--mute);margin:12px 0 0}
 .legend i{display:inline-block;width:12px;height:12px;border-radius:2px;vertical-align:-1px;margin-right:5px}
 .todo{background:var(--card);border:1px solid var(--line);border-radius:8px}
@@ -99,7 +112,7 @@ dt{color:var(--mute)}dd{margin:0}
 .log li{padding:8px 0;border-top:1px solid var(--line)}
 .log li:first-child{border-top:0}
 footer{color:var(--mute);font-size:.85rem;margin-top:36px}
-@media(max-width:720px){.two{grid-template-columns:1fr}.rack{grid-template-columns:repeat(3,1fr)}.cols{grid-template-columns:1fr}.cols>div{border-left:0;border-top:1px solid var(--line)}.cols>div:first-child{border-top:0}header input{margin-left:0;width:100%}}
+@media(max-width:720px){.cl{grid-template-columns:1fr}.two{grid-template-columns:1fr}.rack{grid-template-columns:repeat(3,1fr)}.cols{grid-template-columns:1fr}.cols>div{border-left:0;border-top:1px solid var(--line)}.cols>div:first-child{border-top:0}header input{margin-left:0;width:100%}}
 </style>
 </head>
 <body>
@@ -150,26 +163,65 @@ const carState=(S,c)=>S[c].some((x,i)=>x===null||isWip(c,i))?"wip":"ok";
 const stText=s=>s==="ok"?"ปกติ":"กำลังดำเนินการ";
 
 const truck=(w=46)=>`<svg class="truck" width="${w}" height="${Math.round(w/2)}" viewBox="0 0 64 32" role="img" aria-label="รถดั๊ม"><path d="M3 5h33l-3 17H3z" fill="currentColor"/><path d="M38 10h11l7 8v4H38z" fill="currentColor"/><path d="M42 13h6l4 5h-10z" fill="var(--card)"/><rect x="2" y="22" width="55" height="3" rx="1" fill="currentColor"/><g fill="var(--ink)"><circle cx="11" cy="26" r="5"/><circle cx="24" cy="26" r="5"/><circle cx="48" cy="26" r="5"/></g><g fill="var(--card)"><circle cx="11" cy="26" r="1.8"/><circle cx="24" cy="26" r="1.8"/><circle cx="48" cy="26" r="1.8"/></g></svg>`;
-/* ผังตำแหน่งแพคบนรถ (แบบภาพร่างหน้างาน) ปรับตำแหน่งได้ที่นี่
-   n = เลขแพค, x/y/z = ตำแหน่ง, w/l/h = กว้าง/ยาว/สูง (หน่วยสมมติ) */
-const SL={w:1.4,l:3,h:.5}, TALL={w:1.1,l:4,h:.9}, TOP={w:1.1,l:2.8,h:.8};
-const LAYOUT=[
- {name:"แพค 1-4",boxes:[{n:3,x:0,y:0,z:0,...SL},{n:1,x:0,y:-3.3,z:0,...SL},{n:4,x:-1.6,y:-1.6,z:0,...SL},{n:2,x:-1.6,y:-4.9,z:0,...SL}]},
- {name:"แพค 5-8",boxes:[{n:6,x:0,y:0,z:0,...TALL},{n:7,x:1.2,y:0,z:0,...TALL},{n:8,x:2.4,y:0,z:0,...TALL},{n:5,x:1.2,y:.6,z:.9,...TOP}]},
- {name:"แพค 9-12",boxes:[{n:10,x:0,y:0,z:0,...TALL},{n:11,x:1.2,y:0,z:0,...TALL},{n:12,x:2.4,y:0,z:0,...TALL},{n:9,x:1.2,y:.6,z:.9,...TOP}]}];
-function isoSVG(boxes,id,S){
- const s=24,P=(x,y,z)=>[(x-y)*.866*s,(x+y)*.5*s-z*s],pts=a=>a.map(q=>q[0].toFixed(1)+","+q[1].toFixed(1)).join(" ");
- const bs=[...boxes].sort((a,b)=>a.z-b.z||(a.x+a.y)-(b.x+b.y));let all=[],out="";
- bs.forEach(b=>{
-  const zt=b.z+b.h,x2=b.x+b.w,y2=b.y+b.l;
-  const T=[P(b.x,b.y,zt),P(x2,b.y,zt),P(x2,y2,zt),P(b.x,y2,zt)],R=[P(x2,b.y,b.z),P(x2,y2,b.z),P(x2,y2,zt),P(x2,b.y,zt)],Lf=[P(b.x,y2,b.z),P(x2,y2,b.z),P(x2,y2,zt),P(b.x,y2,zt)];
-  all.push(...T,...R,...Lf);
-  const v=S[id][b.n-1],st=v===null?"empty":isWip(id,b.n-1)?"wip":"ok",sk=!!v&&v!=="เดิม",c=P(b.x+b.w/2,b.y+b.l/2,zt),lab=v===null?"ว่าง":sk?v:"เดิม";
-  const g=`<g class="pk ${st}${sk?" sk":""}"><title>pack ${b.n}: ${v===null?"ว่าง (ถอดออกแล้ว)":lab}${st==="wip"?" (กำลังดำเนินการ)":""}</title><polygon class="f l" points="${pts(Lf)}"/><polygon class="f r" points="${pts(R)}"/><polygon class="f t" points="${pts(T)}"/><text class="n" x="${c[0].toFixed(1)}" y="${(c[1]-1).toFixed(1)}">${b.n}</text><text class="s" x="${c[0].toFixed(1)}" y="${(c[1]+12).toFixed(1)}">${lab}</text></g>`;
-  out+=sk?`<a href="#/pack/${v}">${g}</a>`:g;});
- const xs=all.map(q=>q[0]),ys=all.map(q=>q[1]),x0=Math.min(...xs)-8,y0=Math.min(...ys)-8;
- return `<svg viewBox="${x0.toFixed(0)} ${y0.toFixed(0)} ${(Math.max(...xs)-x0+8).toFixed(0)} ${(Math.max(...ys)-y0+8).toFixed(0)}" role="group" aria-label="ผังแพคบนรถ ${id}">${out}</svg>`;}
-const rackView=(id,S)=>`<div class="racks">${LAYOUT.map(g=>`<figure>${isoSVG(g.boxes,id,S)}<figcaption>${g.name}</figcaption></figure>`).join("")}</div>`;
+/* ผังตำแหน่งแพคบนรถดั๊ม (มองจากด้านบน หน้ารถอยู่ด้านบนของภาพ)
+   9-12 = ด้านซ้ายระหว่างล้อหน้า-หลัง, 5-8 = ด้านขวา, 1-4 = หลังหัวเก๋งใกล้กระบอกยก
+   ลำดับในแต่ละกลุ่มปรับได้ที่ 3 บรรทัดนี้ (เรียงจากหน้ารถไปท้ายรถ) */
+const ORDER={left:[9,10,11,12],right:[5,6,7,8],back:[4,2,3,1]};
+function planSVG(id,S){
+ const pk=[];
+ ORDER.left.forEach((n,i)=>pk.push({n,x:62,y:148+i*56,w:56,h:50}));
+ ORDER.right.forEach((n,i)=>pk.push({n,x:242,y:148+i*56,w:56,h:50}));
+ ORDER.back.forEach((n,i)=>pk.push({n,x:124+(i%2)*60,y:148+Math.floor(i/2)*44,w:52,h:36}));
+ const outline=`<g class="tk"><rect x="84" y="16" width="192" height="92" rx="16"/><path d="M100 36h160"/><rect x="70" y="124" width="220" height="398" rx="8" class="d"/>
+  <rect x="34" y="46" width="22" height="52" rx="4"/><rect x="304" y="46" width="22" height="52" rx="4"/>
+  <rect x="26" y="392" width="14" height="74" rx="4"/><rect x="42" y="392" width="14" height="74" rx="4"/><rect x="304" y="392" width="14" height="74" rx="4"/><rect x="320" y="392" width="14" height="74" rx="4"/>
+  <path d="M56 72h248M56 429h248" class="d"/><rect x="170" y="236" width="20" height="58" rx="5"/></g>
+  <g class="tl"><text x="180" y="92">หัวเก๋ง (หน้ารถ)</text><text x="90" y="140">ด้านซ้าย</text><text x="270" y="140">ด้านขวา</text><text x="180" y="140">หลังหัวเก๋ง</text><text x="180" y="310">กระบอกยกดั๊ม</text></g>`;
+ const cells=pk.map(b=>{
+  const v=S[id][b.n-1],st=v===null?"empty":isWip(id,b.n-1)?"wip":"ok",sk=!!v&&v!=="เดิม",lab=v===null?"ว่าง":sk?v:"เดิม",cx=b.x+b.w/2,cy=b.y+b.h/2;
+  const g=`<g class="pk ${st}${sk?" sk":""}"><title>pack ${b.n}: ${v===null?"ว่าง (ถอดออกแล้ว)":lab}${st==="wip"?" (กำลังดำเนินการ)":""}</title><rect class="f" x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}" rx="6"/><text class="n" x="${cx}" y="${cy-1}">${b.n}</text><text class="s" x="${cx}" y="${cy+13}">${lab}</text></g>`;
+  return sk?`<a href="#/pack/${v}">${g}</a>`:g}).join("");
+ return `<svg viewBox="0 0 360 540" role="group" aria-label="ผังแพคบนรถ ${id}">${outline}${cells}</svg>`}
+/* มุม 3 มิติ: มองจากท้ายรถด้านซ้ายลงมา หน่วยเป็นหน่วยสมมติ
+   a = ระยะจากท้ายรถไปหน้ารถ, b = ระยะจากด้านซ้ายไปขวา, z = ความสูง
+   9 และ 5 วางซ้อนบนก้อนล่างและวางขวางกับก้อนล่าง */
+function iso3d(id,S){
+ const s=22,KX=.8,KY=.6,KZ=.8,zb=1.2,P=(a,b,z)=>[(a-b)*KX*s,-(a+b)*KY*s-z*KZ*s],f=n=>n.toFixed(1),pts=q=>q.map(p=>f(p[0])+","+f(p[1])).join(" "),all=[];
+ const pl=(q,c)=>{all.push(...q);return `<polyline ${c?`class="${c}" `:""}points="${pts(q)}"/>`},cl=(q,c)=>pl([...q,q[0]],c);
+ const fc=(a0,a1,b0,b1,z0,z1)=>({T:[P(a0,b0,z1),P(a1,b0,z1),P(a1,b1,z1),P(a0,b1,z1)],L:[P(a0,b0,z0),P(a1,b0,z0),P(a1,b0,z1),P(a0,b0,z1)],R:[P(a0,b0,z0),P(a0,b1,z0),P(a0,b1,z1),P(a0,b0,z1)]});
+ const wheel=(a,b)=>{const q=[];for(let i=0;i<=24;i++){const t=i/24*6.2832;q.push(P(a+1.6*Math.cos(t),b,1.6+1.6*Math.sin(t)))}return pl(q)};
+ let o='<g class="tk">';
+ [-1.4,-.2,11.2,12.4].forEach(b=>o+=wheel(4,b));[-.4,11.4].forEach(b=>o+=wheel(23.2,b));
+ [4.4,6.6].forEach(b=>o+=pl([P(0,b,1),P(27,b,1)]));
+ const cab=fc(21.6,27,1.5,9.5,1.8,7.2);o+=cl(cab.T)+cl(cab.L)+cl(cab.R);
+ o+=cl([P(.4,-.4,5.4),P(21.2,-.4,5.4),P(21.2,11.4,5.4),P(.4,11.4,5.4)],"d")+pl([P(17.4,5.5,zb),P(15.2,5.5,5.2)],"cy")+"</g>";
+ const lt=[[24.3,5.5,7.8,"หัวเก๋ง"],[-1.6,5.5,1,"ท้ายรถ"]].map(([a,b,z,t])=>{const q=P(a,b,z);all.push(q);return `<text x="${f(q[0])}" y="${f(q[1])}">${t}</text>`}).join("");
+ o+=`<g class="tl">${lt}</g>`;
+ const PK=[];
+ [[4,19.8,3.2],[2,19.8,5.8],[3,17.8,3.2],[1,17.8,5.8]].forEach(([n,a0,b0])=>PK.push({n,a0,a1:a0+1.5,b0,b1:b0+2,z0:zb,z1:zb+.7,g:0,ord:a0*10+b0,kind:"slab"}));
+ [{b0:7.6,b1:11,tb0:8,tb1:10.6,bot:[8,7,6],top:5,g:1},{b0:0,b1:3.4,tb0:.4,tb1:3,bot:[12,11,10],top:9,g:2}].forEach(sd=>{
+  sd.bot.forEach((n,i)=>{const a0=6.6+i*3.4;PK.push({n,a0,a1:a0+3.2,b0:sd.b0,b1:sd.b1,z0:zb,z1:zb+2.2,g:sd.g,ord:i,kind:"tall"})});
+  PK.push({n:sd.top,a0:7,a1:16.2,b0:sd.tb0,b1:sd.tb1,z0:zb+2.2,z1:zb+3.4,g:sd.g,ord:99,kind:"top"})});
+ let ov="";
+ PK.sort((x,y)=>x.g-y.g||(x.kind==="top")-(y.kind==="top")||y.ord-x.ord);
+ PK.forEach(pk=>{
+  const v=S[id][pk.n-1],st=v===null?"empty":isWip(id,pk.n-1)?"wip":"ok",sk=!!v&&v!=="เดิม",lab=v===null?"ว่าง":sk?v:"เดิม",F=fc(pk.a0,pk.a1,pk.b0,pk.b1,pk.z0,pk.z1);
+  all.push(...F.T,...F.L,...F.R);
+  const[X,Y]=P((pk.a0+pk.a1)/2,pk.b0,(pk.z0+pk.z1)/2),T=`matrix(${KX},${-KY},0,1,${f(X)},${f(Y)})`;
+  let t;
+  if(pk.kind==="tall")t=`<g transform="${T}"><text class="n3" x="0" y="-2">${pk.n}</text>${sk?`<rect class="pill" x="-23" y="3" width="46" height="14" rx="3"/><text class="pt" x="0" y="13.5">${v}</text>`:`<text class="s3" x="0" y="14">${lab}</text>`}</g>`;
+  else if(pk.kind==="top")t=`<g transform="${T}"><text class="n3" x="-34" y="6">${pk.n}</text>${sk?`<rect class="pill" x="6" y="-8" width="46" height="14" rx="3"/><text class="pt" x="29" y="2.5">${v}</text>`:`<text class="s3" x="29" y="5">${lab}</text>`}</g>`;
+  else{const[cx,cy]=P((pk.a0+pk.a1)/2,(pk.b0+pk.b1)/2,pk.z1);t=`<text class="n3" x="${f(cx)}" y="${f(cy-1)}">${pk.n}</text>${sk?`<rect class="pill" x="${f(cx-23)}" y="${f(cy+3)}" width="46" height="14" rx="3"/><text class="pt" x="${f(cx)}" y="${f(cy+13.5)}">${v}</text>`:`<text class="s3" x="${f(cx)}" y="${f(cy+14)}">${lab}</text>`}`}
+  const g=`<g class="pk ${st}${sk?" sk":""}"><title>pack ${pk.n}: ${v===null?"ว่าง (ถอดออกแล้ว)":lab}${st==="wip"?" (กำลังดำเนินการ)":""}</title><polygon class="f r" points="${pts(F.R)}"/><polygon class="f l" points="${pts(F.L)}"/><polygon class="f t" points="${pts(F.T)}"/>${pk.kind==="slab"?"":t}</g>`;
+  o+=sk?`<a href="#/pack/${v}">${g}</a>`:g;
+  if(pk.kind==="slab"){const lb=`<g class="pk ${st}${sk?" sk":""}">${t}</g>`;ov+=sk?`<a href="#/pack/${v}">${lb}</a>`:lb}});
+ o+=ov;
+ const xs=all.map(q=>q[0]),ys=all.map(q=>q[1]),x0=Math.min(...xs)-24,y0=Math.min(...ys)-24;
+ return `<svg viewBox="${f(x0)} ${f(y0)} ${f(Math.max(...xs)-x0+24)} ${f(Math.max(...ys)-y0+24)}" role="group" aria-label="ผังแพคบนรถ ${id} มุม 3 มิติ">${o}</svg>`}
+function setV(b,m){const w=b.closest(".vw");w.dataset.v=m;w.querySelectorAll(".bt").forEach(x=>x.setAttribute("aria-pressed",x.dataset.m===m))}
+const rackView=(id,S)=>`<div class="vw" data-v="3d"><div class="vt"><button class="bt" data-m="3d" aria-pressed="true" onclick="setV(this,'3d')">มุม 3 มิติ</button><button class="bt" data-m="top" aria-pressed="false" onclick="setV(this,'top')">มุมบน</button></div>
+<div class="iso">${iso3d(id,S)}</div><div class="plan">${planSVG(id,S)}</div>
+<p class="mute" style="font-size:.85rem;margin:6px 0 0">มุม 3 มิติมองจากท้ายรถด้านซ้าย แสดงการวางซ้อนของ 9 และ 5 เส้นหนาจางๆ กลางรถคือกระบอกยกดั๊ม (บนมือถือเลื่อนภาพซ้าย-ขวาได้) ส่วนมุมบนเป็นผังย่อ ไม่แสดงการซ้อน</p></div>`;
 const V={
 home(){
  const S=slots();let k=0,e=0;
@@ -197,9 +249,9 @@ car(id){
   if(r.to===id)log.push({d:r.toDate||r.date,t:1,h:`ติดตั้ง <a href="#/pack/${r.sk}">${r.sk}</a> ที่ pack ${r.toPack}`});});
  log.sort((a,b)=>b.d.localeCompare(a.d)||b.t-a.t);
  return `<div class="crumb"><a href="#/">ฟลีต</a> / ${id}</div>
- <h2 class="hd ${st}">${truck(60)}${id} <span class="chip ${st}">${stText(st)}</span></h2><p class="sub">ตำแหน่งแพคทั้ง 12 ก้อนบนรถ ณ ตอนนี้ (กดที่แพค SK เพื่อดูประวัติ)</p>
- ${rack}${legend()}
- <h3>ประวัติของคันนี้</h3>${log.length?`<ul class="log">${log.map(l=>`<li><span class="mute">${fd(l.d)}</span> &nbsp;${l.h}</li>`).join("")}</ul>`:'<p class="mute">ยังไม่เคยถอดหรือเปลี่ยนแพค</p>'}`;
+ <h2 class="hd ${st}">${truck(60)}${id} <span class="chip ${st}">${stText(st)}</span></h2><p class="sub">ตำแหน่งแพคทั้ง 12 ก้อนบนรถ (กดที่แพค SK เพื่อดูประวัติ)</p>
+ <div class="cl"><div>${rack}</div><div>${legend()}
+ <h3>ประวัติของคันนี้</h3>${log.length?`<ul class="log">${log.map(l=>`<li><span class="mute">${fd(l.d)}</span> &nbsp;${l.h}</li>`).join("")}</ul>`:'<p class="mute">ยังไม่เคยถอดหรือเปลี่ยนแพค</p>'}</div></div>`;
 },
 pack(sk){
  const rs=D.rounds.filter(r=>r.sk===sk).sort((a,b)=>b.n-a.n);if(!rs.length)return V.nf();
@@ -226,7 +278,7 @@ const legend=()=>`<p class="legend"><span><i style="background:var(--ok)"></i>�
 function route(){
  const [p,a]=location.hash.replace(/^#\/?/,"").split("/").slice(0,2);
  $("#app").innerHTML=p==="car"?V.car(a):p==="pack"?V.pack(a):p==="packs"?V.packs(a):V.home();
- if(loadErr)$("#app").insertAdjacentHTML("afterbegin",'<p class="wipc">โหลดข้อมูลจาก Google Sheets ไม่ได้ ตรวจว่าชีตตั้ง Share เป็น Anyone with the link และมีแท็บ rounds กับ slots ตอนนี้แสดงข้อมูลตัวอย่าง</p>');
+ if(loadErr)$("#app").insertAdjacentHTML("afterbegin",'<p class="wipc">โหลดข้อมูลจาก Google Sheets ไม่ได้ ตรวจว่าชีตตั้ง Share เป็น Anyone with the link และชื่อแท็บตรงกับ Sheet1 / Sheet2 ตอนนี้แสดงข้อมูลตัวอย่าง</p>');
  slots();
  if(D.undated)$("#app").insertAdjacentHTML("beforeend",'<p class="mute">มีรอบที่ยังไม่ใส่วันที่ ตำแหน่งแพคในแต่ละช่องคำนวณจากลำดับรอบที่แทน ควรกรอกวันที่เพื่อความแม่นยำ</p>');
  $("#app").insertAdjacentHTML("beforeend",`<footer>${SHEET_ID&&!loadErr?"โหลดจาก Google Sheets เมื่อ":"ข้อมูลตัวอย่าง อัปเดต"} ${fd(D.updated)}</footer>`);
