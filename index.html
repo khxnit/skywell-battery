@@ -22,7 +22,7 @@ header nav{display:flex;gap:4px}
 header nav a{padding:6px 12px;border-radius:6px;text-decoration:none;color:inherit;opacity:.8}
 header nav a[aria-current]{background:rgba(255,255,255,.16);opacity:1}
 header input{margin-left:auto;min-width:180px;padding:7px 10px;border-radius:6px;border:0;font:inherit;background:#fff;color:#17242d}
-main{max-width:1080px;margin:0 auto;padding:22px 20px 60px}
+main{max-width:1180px;margin:0 auto;padding:22px 20px 60px}
 h2{font-size:1.5rem;margin:0 0 4px;font-weight:600}
 h3{font-size:1rem;margin:26px 0 8px;font-weight:600}
 .sub{color:var(--mute);margin:0 0 20px}
@@ -61,7 +61,7 @@ a.slot:hover{outline:2px solid var(--sk)}
 .plan svg{display:block;width:100%;max-width:400px;margin:0 auto;height:auto}
 .tk{fill:none;stroke:var(--mute);stroke-opacity:.5;stroke-width:1.6}
 .tk .d{stroke-dasharray:5 4;stroke-opacity:.4}
-.tl text{font-size:10px;fill:var(--mute);text-anchor:middle;opacity:.9}
+.tl text{font-size:11.5px;fill:var(--mute);text-anchor:middle;opacity:.9}
 .pk .f{stroke:rgba(0,0,0,.55);stroke-width:1.2}
 .pk.ok .f{fill:#7fcda5}.pk.wip .f{fill:#f4cb78}
 .pk.empty .f{fill:rgba(180,64,47,.1);stroke:var(--bad);stroke-dasharray:4 3}
@@ -77,13 +77,30 @@ a:hover .pk .f{stroke-width:3.4}
 .vw[data-v="3d"] .bt[data-m="3d"],.vw[data-v="top"] .bt[data-m="top"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
 .vw[data-v="3d"] .plan,.vw[data-v="top"] .iso{display:none}
 .iso{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px;overflow-x:auto}
-.iso svg{display:block;min-width:640px;width:100%;max-width:880px;height:auto;margin:0 auto}
+.iso svg{display:block;min-width:700px;width:100%;max-width:1120px;height:auto;margin:0 auto}
 .tk polyline{fill:none}.tk .d{stroke-dasharray:5 4;stroke-opacity:.45}.tk .cy{stroke-width:5;stroke-linecap:round;stroke-opacity:.35}
-.pk.ok .f.t{fill:#8fd8b3}.pk.ok .f.l{fill:#56b588}.pk.ok .f.r{fill:#37946a}
-.pk.wip .f.t{fill:#f8d68d}.pk.wip .f.l{fill:#e8ad48}.pk.wip .f.r{fill:#c98a22}
+.pk.ok .f.t{fill:#9be3c4}.pk.ok .f.l{fill:#5cc19a}.pk.ok .f.r{fill:#3fa27d}
+.pk.wip .f.t{fill:#ffdc92}.pk.wip .f.l{fill:#f2b84b}.pk.wip .f.r{fill:#d99620}
+.pk .f{stroke:#17433a;stroke-width:1;stroke-linejoin:round}
+.pk.sk .f{stroke:var(--sk);stroke-width:2}
+.pk .bd{fill:#fff;stroke:#14313a;stroke-width:1.4}.pk.sk .bd{stroke:var(--sk);stroke-width:2}.pk.empty .bd{stroke:var(--bad)}
+.pk .bn{font-size:16px;font-weight:700;fill:#102a33}
+.pk .bv{font-size:12px;font-weight:700;fill:var(--bad)}
+.gnd{fill:rgba(0,0,0,.045);stroke:none}
+.bw{fill:rgba(120,140,155,.07);stroke:var(--mute);stroke-opacity:.5;stroke-width:1.2}.bw.d{stroke-dasharray:5 4;fill:rgba(120,140,155,.05)}
+.cab{fill:rgba(120,140,155,.12);stroke:var(--mute);stroke-opacity:.65;stroke-width:1.3}.cab.t{fill:rgba(120,140,155,.2)}.cab.w{fill:rgba(110,160,200,.18)}
+.tire{fill:#9aa6ae;stroke:#566670;stroke-width:1}.tface{fill:#c4ccd1;stroke:#566670}.trim{fill:#e6eaec;stroke:#667781}.thub{fill:#8a979f;stroke:none}
+@media(prefers-color-scheme:dark){.tire{fill:#2f3c45}.tface{fill:#46555f}.trim{fill:#5a6a75}.thub{fill:#7d8d98}}
+.far{opacity:.5}
+.rail{fill:none;stroke:var(--mute);stroke-opacity:.4;stroke-width:1.3}
+.cyo{fill:none;stroke:var(--mute);stroke-opacity:.55;stroke-width:8;stroke-linecap:round}.cyi{fill:none;stroke:var(--card);stroke-width:4;stroke-linecap:round}
+.lead{fill:none;stroke:var(--mute);stroke-opacity:.6;stroke-width:1;stroke-dasharray:3 3}
+.gd{fill:var(--ink);fill-opacity:.05;stroke:none}.tk .rb{stroke-opacity:.3}
+.pc{fill:#fff;stroke-width:2.6}.pk.ok .pc{stroke:#2f8b5f}.pk.wip .pc{stroke:#c98a22}.pk.empty .pc{stroke:var(--bad);stroke-dasharray:3 2}.pk.sk .pc{stroke:var(--sk);stroke-width:3.2}
+.ld{stroke:var(--mute);stroke-width:1;fill:var(--mute)}.pk .pn{font-size:14px;font-weight:700}
 .pk .n3{font-size:17px;font-weight:700}.pk .s3{font-size:11px;font-weight:600}
 .pill{fill:#fff;stroke:var(--sk);stroke-width:1.2}
-.pk .pt{font-size:10px;font-weight:700;fill:#0f3d73}
+.pk .pt{font-size:11.5px;font-weight:700;fill:#0f3d73}
 .legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.85rem;color:var(--mute);margin:12px 0 0}
 .legend i{display:inline-block;width:12px;height:12px;border-radius:2px;vertical-align:-1px;margin-right:5px}
 .todo{background:var(--card);border:1px solid var(--line);border-radius:8px}
@@ -130,14 +147,17 @@ footer{color:var(--mute);font-size:.85rem;margin-top:36px}
 const D={
  updated:"2026-10-08",
  cars:["08-178","08-189","08-190","08-191","08-192","08-193","08-194","08-195","08-196","08-197","08-198"],
- wip:{"08-192":[4,5,6],"08-194":[1,2,3]},   // ช่องที่ตั้งสถานะ "กำลังดำเนินการ" (กรอกเองจากหน้า 1)
+ wip:{},   // ช่องที่ตั้งสถานะ "กำลังดำเนินการ" (กรอกเองจากหน้า 1)
  rounds:[
-  {sk:"SK-01",n:1,from:"08-192",fromPack:4,date:"2026-10-06",meter:null,symptom:"Vdiff",cd:"ผ่าน",soh:90,ah:207,bal:"ผ่าน",to:"08-194",toPack:1,toDate:null,toMeter:null,link:""},
-  {sk:"SK-02",n:1,from:"08-192",fromPack:5,date:"2026-10-06",meter:null,symptom:"Vdiff",cd:"ผ่าน",soh:90,ah:207,bal:"ผ่าน",to:"08-194",toPack:2,toDate:null,toMeter:null,link:""},
-  {sk:"SK-03",n:1,from:"08-192",fromPack:6,date:"2026-10-06",meter:null,symptom:"Vdiff",cd:"ผ่าน",soh:90,ah:207,bal:"ผ่าน",to:"08-194",toPack:3,toDate:null,toMeter:null,link:""},
-  {sk:"SK-04",n:1,from:"08-194",fromPack:1,date:"2026-10-06",meter:null,symptom:"Vdiff",cd:"กำลังดำเนินการ",soh:90,ah:207,bal:"รอดำเนินการ",to:"",toPack:null,toDate:null,toMeter:null,link:""},
-  {sk:"SK-05",n:1,from:"08-194",fromPack:2,date:"2026-10-06",meter:null,symptom:"Vdiff",cd:"ผ่าน",soh:90,ah:207,bal:"รอดำเนินการ",to:"",toPack:null,toDate:null,toMeter:null,link:""},
-  {sk:"SK-06",n:1,from:"08-194",fromPack:3,date:"2026-10-06",meter:null,symptom:"Vdiff",cd:"ผ่าน",soh:90,ah:207,bal:"รอดำเนินการ",to:"",toPack:null,toDate:null,toMeter:null,link:""}
+  {"sk":"SK-01","n":1,"from":"08-192","fromPack":4,"date":"2026-10-06","meter":null,"symptom":"Vdiff","cd":"ผ่าน","soh":90,"ah":207,"bal":"ผ่าน","to":"08-194","toPack":1,"toDate":null,"toMeter":null,"link":""},
+  {"sk":"SK-02","n":1,"from":"08-192","fromPack":5,"date":"2026-10-06","meter":null,"symptom":"Vdiff","cd":"ผ่าน","soh":90,"ah":207,"bal":"ผ่าน","to":"08-194","toPack":2,"toDate":null,"toMeter":null,"link":""},
+  {"sk":"SK-03","n":1,"from":"08-192","fromPack":6,"date":"2026-10-06","meter":null,"symptom":"Vdiff","cd":"ผ่าน","soh":90,"ah":207,"bal":"ผ่าน","to":"08-194","toPack":3,"toDate":null,"toMeter":null,"link":""},
+  {"sk":"SK-04","n":1,"from":"08-194","fromPack":1,"date":"2026-10-06","meter":null,"symptom":"Vdiff","cd":"กำลังดำเนินการ","soh":null,"ah":null,"bal":"รอดำเนินการ","to":"","toPack":null,"toDate":null,"toMeter":null,"link":""},
+  {"sk":"SK-05","n":1,"from":"08-194","fromPack":2,"date":"2026-10-06","meter":null,"symptom":"Vdiff","cd":"กำลังดำเนินการ","soh":null,"ah":null,"bal":"รอดำเนินการ","to":"","toPack":null,"toDate":null,"toMeter":null,"link":""},
+  {"sk":"SK-06","n":1,"from":"08-194","fromPack":3,"date":"2026-10-06","meter":null,"symptom":"Vdiff","cd":"กำลังดำเนินการ","soh":null,"ah":null,"bal":"รอดำเนินการ","to":"","toPack":null,"toDate":null,"toMeter":null,"link":""},
+  {"sk":"SK-01","n":2,"from":"08-194","fromPack":1,"date":"","meter":null,"symptom":"Vdiff","cd":"กำลังดำเนินการ","soh":null,"ah":null,"bal":"รอดำเนินการ","to":"","toPack":null,"toDate":null,"toMeter":null,"link":""},
+  {"sk":"SK-02","n":2,"from":"08-194","fromPack":2,"date":"","meter":null,"symptom":"Vdiff","cd":"กำลังดำเนินการ","soh":null,"ah":null,"bal":"รอดำเนินการ","to":"","toPack":null,"toDate":null,"toMeter":null,"link":""},
+  {"sk":"SK-03","n":2,"from":"08-194","fromPack":3,"date":"","meter":null,"symptom":"Vdiff","cd":"กำลังดำเนินการ","soh":null,"ah":null,"bal":"รอดำเนินการ","to":"","toPack":null,"toDate":null,"toMeter":null,"link":""}
  ]};
 
 const $=s=>document.querySelector(s), esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -164,9 +184,9 @@ const stText=s=>s==="ok"?"ปกติ":"กำลังดำเนินกา
 
 const truck=(w=46)=>`<svg class="truck" width="${w}" height="${Math.round(w/2)}" viewBox="0 0 64 32" role="img" aria-label="รถดั๊ม"><path d="M3 5h33l-3 17H3z" fill="currentColor"/><path d="M38 10h11l7 8v4H38z" fill="currentColor"/><path d="M42 13h6l4 5h-10z" fill="var(--card)"/><rect x="2" y="22" width="55" height="3" rx="1" fill="currentColor"/><g fill="var(--ink)"><circle cx="11" cy="26" r="5"/><circle cx="24" cy="26" r="5"/><circle cx="48" cy="26" r="5"/></g><g fill="var(--card)"><circle cx="11" cy="26" r="1.8"/><circle cx="24" cy="26" r="1.8"/><circle cx="48" cy="26" r="1.8"/></g></svg>`;
 /* ผังตำแหน่งแพคบนรถดั๊ม (มองจากด้านบน หน้ารถอยู่ด้านบนของภาพ)
-   9-12 = ด้านซ้ายระหว่างล้อหน้า-หลัง, 5-8 = ด้านขวา, 1-4 = หลังหัวเก๋งใกล้กระบอกยก
+   5-8 = ด้านซ้ายระหว่างล้อหน้า-หลัง, 9-12 = ด้านขวา, 1-4 = หลังหัวเก๋งใกล้กระบอกยก
    ลำดับในแต่ละกลุ่มปรับได้ที่ 3 บรรทัดนี้ (เรียงจากหน้ารถไปท้ายรถ) */
-const ORDER={left:[9,10,11,12],right:[5,6,7,8],back:[4,2,3,1]};
+const ORDER={left:[5,6,7,8],right:[9,10,11,12],back:[4,2,3,1]};
 function planSVG(id,S){
  const pk=[];
  ORDER.left.forEach((n,i)=>pk.push({n,x:62,y:148+i*56,w:56,h:50}));
@@ -182,46 +202,52 @@ function planSVG(id,S){
   const g=`<g class="pk ${st}${sk?" sk":""}"><title>pack ${b.n}: ${v===null?"ว่าง (ถอดออกแล้ว)":lab}${st==="wip"?" (กำลังดำเนินการ)":""}</title><rect class="f" x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}" rx="6"/><text class="n" x="${cx}" y="${cy-1}">${b.n}</text><text class="s" x="${cx}" y="${cy+13}">${lab}</text></g>`;
   return sk?`<a href="#/pack/${v}">${g}</a>`:g}).join("");
  return `<svg viewBox="0 0 360 540" role="group" aria-label="ผังแพคบนรถ ${id}">${outline}${cells}</svg>`}
-/* มุม 3 มิติ: มองจากท้ายรถด้านซ้ายลงมา หน่วยเป็นหน่วยสมมติ
-   a = ระยะจากท้ายรถไปหน้ารถ, b = ระยะจากด้านซ้ายไปขวา, z = ความสูง
-   9 และ 5 วางซ้อนบนก้อนล่างและวางขวางกับก้อนล่าง */
+/* มุม 3 มิติ: มองจากท้ายรถด้านซ้ายลงมา (หน้ารถอยู่ซ้ายบน เหมือนภาพตัวอย่าง) หน่วยเป็นเมตร
+   a = ระยะจากท้ายรถไปหน้ารถ, b = ระยะจากด้านซ้ายของรถไปด้านขวา, z = ความสูง
+   แพคจริงขนาด 630 x 1100 x 250 มม. ก้อน 5 และ 9 วางซ้อนข้างบนและวางขวางกับก้อนล่าง */
 function iso3d(id,S){
- const s=22,KX=.8,KY=.6,KZ=.8,zb=1.2,P=(a,b,z)=>[(a-b)*KX*s,-(a+b)*KY*s-z*KZ*s],f=n=>n.toFixed(1),pts=q=>q.map(p=>f(p[0])+","+f(p[1])).join(" "),all=[];
+ const s=80,CX=.848,SY=.53,SP=.6,ZZ=.8,P=(a,b,z)=>[(b*SY-a*CX)*s,-(a*SY+b*CX)*SP*s-z*ZZ*s],f=n=>n.toFixed(1),pts=q=>q.map(p=>f(p[0])+","+f(p[1])).join(" "),all=[];
  const pl=(q,c)=>{all.push(...q);return `<polyline ${c?`class="${c}" `:""}points="${pts(q)}"/>`},cl=(q,c)=>pl([...q,q[0]],c);
  const fc=(a0,a1,b0,b1,z0,z1)=>({T:[P(a0,b0,z1),P(a1,b0,z1),P(a1,b1,z1),P(a0,b1,z1)],L:[P(a0,b0,z0),P(a1,b0,z0),P(a1,b0,z1),P(a0,b0,z1)],R:[P(a0,b0,z0),P(a0,b1,z0),P(a0,b1,z1),P(a0,b0,z1)]});
- const wheel=(a,b)=>{const q=[];for(let i=0;i<=24;i++){const t=i/24*6.2832;q.push(P(a+1.6*Math.cos(t),b,1.6+1.6*Math.sin(t)))}return pl(q)};
- let o='<g class="tk">';
- [-1.4,-.2,11.2,12.4].forEach(b=>o+=wheel(4,b));[-.4,11.4].forEach(b=>o+=wheel(23.2,b));
- [4.4,6.6].forEach(b=>o+=pl([P(0,b,1),P(27,b,1)]));
- const cab=fc(21.6,27,1.5,9.5,1.8,7.2);o+=cl(cab.T)+cl(cab.L)+cl(cab.R);
- o+=cl([P(.4,-.4,5.4),P(21.2,-.4,5.4),P(21.2,11.4,5.4),P(.4,11.4,5.4)],"d")+pl([P(17.4,5.5,zb),P(15.2,5.5,5.2)],"cy")+"</g>";
- const lt=[[24.3,5.5,7.8,"หัวเก๋ง"],[-1.6,5.5,1,"ท้ายรถ"]].map(([a,b,z,t])=>{const q=P(a,b,z);all.push(q);return `<text x="${f(q[0])}" y="${f(q[1])}">${t}</text>`}).join("");
+ const circ=(a,b,r,zc)=>{const q=[];for(let i=0;i<=28;i++){const t=i/28*6.2832;q.push(P(a+r*Math.cos(t),b,zc+r*Math.sin(t)))}return q};
+ const tire=(a,b,r,rim)=>{let o=pl(circ(a,b-.17,r,.65))+pl(circ(a,b+.17,r,.65));
+  o+=pl([P(a,b-.17,.65+r),P(a,b+.17,.65+r)])+pl([P(a,b-.17,.65-r),P(a,b+.17,.65-r)]);
+  if(rim)o+=pl(circ(a,b-.17,r*.55,.65))+pl(circ(a,b-.17,r*.2,.65));return o};
+ let o=`<polygon class="gd" points="${pts([P(-1.4,-1.4,0),P(9.6,-1.4,0),P(9.6,4.6,0),P(-1.4,4.6,0)])}"/><g class="tk">`;
+ all.push(P(-1.4,-1.4,0),P(9.6,-1.4,0),P(9.6,4.6,0),P(-1.4,4.6,0));
+ [1.1,2.5,6.1].forEach(a=>{o+=pl([P(a,0,.65),P(a,3.2,.65)]);const fr=a>6;
+  (fr?[3.2]:[3,3.4]).forEach(b=>o+=tire(a,b,fr?.62:.65,false));(fr?[0]:[-.2,.2]).forEach(b=>o+=tire(a,b,fr?.62:.65,true))});
+ [1.2,2].forEach(b=>o+=pl([P(-.2,b,1),P(8.2,b,1)]));
+ const cab=fc(7.2,8.3,.5,2.7,1,3);o+=cl(cab.T)+cl(cab.L)+cl(cab.R);
+ o+=cl([P(-.4,-.15,1.9),P(6.3,-.15,1.9),P(6.3,-.15,3.4),P(-.4,-.15,3.4)])+cl([P(-.4,-.15,1.9),P(-.4,3.35,1.9),P(-.4,3.35,3.4),P(-.4,-.15,3.4)]);
+ o+=cl([P(-.4,-.15,3.4),P(6.3,-.15,3.4),P(6.3,3.35,3.4),P(-.4,3.35,3.4)],"d")+cl([P(-.4,-.15,1.9),P(6.3,-.15,1.9),P(6.3,3.35,1.9),P(-.4,3.35,1.9)],"d")+cl([P(6.3,-.1,3.7),P(8.4,-.1,3.7),P(8.4,3.3,3.7),P(6.3,3.3,3.7)],"d");
+ [.7,1.8,2.9,4,5.1].forEach(a=>o+=pl([P(a,-.15,1.9),P(a,-.15,3.4)],"rb"));
+ o+=pl([P(5.5,1.6,1),P(4.9,1.6,2)],"cy")+"</g>";
+ const lt=[[8.9,1.6,2,"หน้ารถ"],[-1,1.6,1.2,"ท้ายรถ"],[5,-1.1,0,"ด้านซ้ายของรถ"],[7.6,4.7,0,"ด้านขวา"]].map(([a,b,z,t])=>{const q=P(a,b,z);all.push(q);return `<text x="${f(q[0])}" y="${f(q[1])}">${t}</text>`}).join("");
  o+=`<g class="tl">${lt}</g>`;
- const PK=[];
- [[4,19.8,3.2],[2,19.8,5.8],[3,17.8,3.2],[1,17.8,5.8]].forEach(([n,a0,b0])=>PK.push({n,a0,a1:a0+1.5,b0,b1:b0+2,z0:zb,z1:zb+.7,g:0,ord:a0*10+b0,kind:"slab"}));
- [{b0:7.6,b1:11,tb0:8,tb1:10.6,bot:[8,7,6],top:5,g:1},{b0:0,b1:3.4,tb0:.4,tb1:3,bot:[12,11,10],top:9,g:2}].forEach(sd=>{
-  sd.bot.forEach((n,i)=>{const a0=6.6+i*3.4;PK.push({n,a0,a1:a0+3.2,b0:sd.b0,b1:sd.b1,z0:zb,z1:zb+2.2,g:sd.g,ord:i,kind:"tall"})});
-  PK.push({n:sd.top,a0:7,a1:16.2,b0:sd.tb0,b1:sd.tb1,z0:zb+2.2,z1:zb+3.4,g:sd.g,ord:99,kind:"top"})});
- let ov="";
+ const PK=[],zb=1,AL=.63,BW=1.1,H=.25;
+ [[4,6.45,.4],[2,6.45,1.7],[3,5.75,.4],[1,5.75,1.7]].forEach(([n,a0,b0])=>PK.push({n,a0,a1:a0+AL,b0,b1:b0+BW,z0:zb,z1:zb+H,g:0,ord:a0*10+b0,kind:"slab"}));
+ [{b0:1.8,top:9,bot:[12,11,10],g:1,dx:34,dy:-32,tdx:-40,tdy:-44},{b0:.3,top:5,bot:[8,7,6],g:2,dx:-34,dy:32,tdx:0,tdy:-46}].forEach(sd=>{
+  sd.bot.forEach((n,i)=>{const a0=3.5+i*.7;PK.push({n,a0,a1:a0+AL,b0:sd.b0,b1:sd.b0+BW,z0:zb,z1:zb+H,g:sd.g,ord:i,kind:"tall",dx:sd.dx,dy:sd.dy})});
+  PK.push({n:sd.top,a0:3.965,a1:5.065,b0:sd.b0+.235,b1:sd.b0+.865,z0:zb+H,z1:zb+2*H,g:sd.g,ord:99,kind:"top",dx:sd.tdx,dy:sd.tdy})});
  PK.sort((x,y)=>x.g-y.g||(x.kind==="top")-(y.kind==="top")||y.ord-x.ord);
+ let ov="";
  PK.forEach(pk=>{
-  const v=S[id][pk.n-1],st=v===null?"empty":isWip(id,pk.n-1)?"wip":"ok",sk=!!v&&v!=="เดิม",lab=v===null?"ว่าง":sk?v:"เดิม",F=fc(pk.a0,pk.a1,pk.b0,pk.b1,pk.z0,pk.z1);
+  const v=S[id][pk.n-1],st=v===null?"empty":isWip(id,pk.n-1)?"wip":"ok",sk=!!v&&v!=="เดิม",F=fc(pk.a0,pk.a1,pk.b0,pk.b1,pk.z0,pk.z1);
   all.push(...F.T,...F.L,...F.R);
-  const[X,Y]=P((pk.a0+pk.a1)/2,pk.b0,(pk.z0+pk.z1)/2),T=`matrix(${KX},${-KY},0,1,${f(X)},${f(Y)})`;
-  let t;
-  if(pk.kind==="tall")t=`<g transform="${T}"><text class="n3" x="0" y="-2">${pk.n}</text>${sk?`<rect class="pill" x="-23" y="3" width="46" height="14" rx="3"/><text class="pt" x="0" y="13.5">${v}</text>`:`<text class="s3" x="0" y="14">${lab}</text>`}</g>`;
-  else if(pk.kind==="top")t=`<g transform="${T}"><text class="n3" x="-34" y="6">${pk.n}</text>${sk?`<rect class="pill" x="6" y="-8" width="46" height="14" rx="3"/><text class="pt" x="29" y="2.5">${v}</text>`:`<text class="s3" x="29" y="5">${lab}</text>`}</g>`;
-  else{const[cx,cy]=P((pk.a0+pk.a1)/2,(pk.b0+pk.b1)/2,pk.z1);t=`<text class="n3" x="${f(cx)}" y="${f(cy-1)}">${pk.n}</text>${sk?`<rect class="pill" x="${f(cx-23)}" y="${f(cy+3)}" width="46" height="14" rx="3"/><text class="pt" x="${f(cx)}" y="${f(cy+13.5)}">${v}</text>`:`<text class="s3" x="${f(cx)}" y="${f(cy+14)}">${lab}</text>`}`}
-  const g=`<g class="pk ${st}${sk?" sk":""}"><title>pack ${pk.n}: ${v===null?"ว่าง (ถอดออกแล้ว)":lab}${st==="wip"?" (กำลังดำเนินการ)":""}</title><polygon class="f r" points="${pts(F.R)}"/><polygon class="f l" points="${pts(F.L)}"/><polygon class="f t" points="${pts(F.T)}"/>${pk.kind==="slab"?"":t}</g>`;
+  const cls=`pk ${st}${sk?" sk":""}`,g=`<g class="${cls}"><title>pack ${pk.n}: ${v===null?"ว่าง (ถอดออกแล้ว)":sk?v:"แพคเดิม"}${st==="wip"?" (กำลังดำเนินการ)":""}</title><polygon class="f r" points="${pts(F.R)}"/><polygon class="f l" points="${pts(F.L)}"/><polygon class="f t" points="${pts(F.T)}"/></g>`;
   o+=sk?`<a href="#/pack/${v}">${g}</a>`:g;
-  if(pk.kind==="slab"){const lb=`<g class="pk ${st}${sk?" sk":""}">${t}</g>`;ov+=sk?`<a href="#/pack/${v}">${lb}</a>`:lb}});
+  const[ax,ay]=P((pk.a0+pk.a1)/2,(pk.b0+pk.b1)/2,pk.z1),x=ax+(pk.dx||0),y=ay+(pk.dy||0);all.push([x-26,y-18],[x+26,y+32]);
+  const tag=sk?`<rect class="pill" x="${f(x-24)}" y="${f(y+16)}" width="48" height="15" rx="4"/><text class="pt" x="${f(x)}" y="${f(y+27)}">${v}</text>`:v===null?`<text class="s3" x="${f(x)}" y="${f(y+28)}">ว่าง</text>`:"";
+  const pin=`<g class="${cls}">${pk.dx||pk.dy?`<line class="ld" x1="${f(ax)}" y1="${f(ay)}" x2="${f(x)}" y2="${f(y)}"/><circle class="ld" cx="${f(ax)}" cy="${f(ay)}" r="2.6"/>`:""}<circle class="pc" cx="${f(x)}" cy="${f(y)}" r="13.5"/><text class="pn" x="${f(x)}" y="${f(y+5.2)}">${pk.n}</text>${tag}</g>`;
+  ov+=sk?`<a href="#/pack/${v}">${pin}</a>`:pin});
  o+=ov;
- const xs=all.map(q=>q[0]),ys=all.map(q=>q[1]),x0=Math.min(...xs)-24,y0=Math.min(...ys)-24;
- return `<svg viewBox="${f(x0)} ${f(y0)} ${f(Math.max(...xs)-x0+24)} ${f(Math.max(...ys)-y0+24)}" role="group" aria-label="ผังแพคบนรถ ${id} มุม 3 มิติ">${o}</svg>`}
+ const xs=all.map(q=>q[0]),ys=all.map(q=>q[1]),x0=Math.min(...xs)-16,y0=Math.min(...ys)-16;
+ return `<svg viewBox="${f(x0)} ${f(y0)} ${f(Math.max(...xs)-x0+16)} ${f(Math.max(...ys)-y0+16)}" role="group" aria-label="ผังแพคบนรถ ${id} มุม 3 มิติ">${o}</svg>`}
 function setV(b,m){const w=b.closest(".vw");w.dataset.v=m;w.querySelectorAll(".bt").forEach(x=>x.setAttribute("aria-pressed",x.dataset.m===m))}
 const rackView=(id,S)=>`<div class="vw" data-v="3d"><div class="vt"><button class="bt" data-m="3d" aria-pressed="true" onclick="setV(this,'3d')">มุม 3 มิติ</button><button class="bt" data-m="top" aria-pressed="false" onclick="setV(this,'top')">มุมบน</button></div>
 <div class="iso">${iso3d(id,S)}</div><div class="plan">${planSVG(id,S)}</div>
-<p class="mute" style="font-size:.85rem;margin:6px 0 0">มุม 3 มิติมองจากท้ายรถด้านซ้าย แสดงการวางซ้อนของ 9 และ 5 เส้นหนาจางๆ กลางรถคือกระบอกยกดั๊ม (บนมือถือเลื่อนภาพซ้าย-ขวาได้) ส่วนมุมบนเป็นผังย่อ ไม่แสดงการซ้อน</p></div>`;
+<p class="mute" style="font-size:.85rem;margin:6px 0 0">มุม 3 มิติมองจากท้ายรถด้านซ้าย แพควาดตามสัดส่วนจริง 630 x 1100 x 250 มม. ส่วนตัวรถเป็นภาพสมมติ ตัวเลขในวงกลมคือเลขแพค ป้ายน้ำเงินคือแพค SK (บนมือถือเลื่อนภาพซ้าย-ขวาได้) ส่วนมุมบนเป็นผังย่อ ไม่แสดงการซ้อน</p></div>`;
 const V={
 home(){
  const S=slots();let k=0,e=0;
@@ -335,7 +361,7 @@ async function load(){
  $("#app").innerHTML='<p class="mute">กำลังโหลดข้อมูลจาก Google Sheets…</p>';
  try{
   const [s,p]=await Promise.all([TABS.status,TABS.packs].map(t=>fetch(csvUrl(t)).then(r=>{if(!r.ok)throw new Error(t);return r.text()})));
-  const st=parseStatus(parseCSV(s));if(st.cars.length)D.cars=st.cars;D.wip=st.wip;
+  const st=parseStatus(parseCSV(s));D.cars=[...new Set([...D.cars,...st.cars])].sort();D.wip=st.wip;
   D.rounds=parsePacks(parseCSV(p));
   D.updated=new Date().toISOString().slice(0,10);
  }catch(e){loadErr=true}
