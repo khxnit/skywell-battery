@@ -229,7 +229,7 @@ home(){
  /* แสดงทีละขั้น: ถ้ามีผล charge/discharge และยังไม่ผ่าน -> แสดงขั้นทดสอบ, ถ้าผ่านแล้วหรือไม่ได้ใส่ -> แสดง Balancing */
  const row=r=>{const dn=r.bal==="ผ่าน",cd=(r.cd||"").trim(),bal=(r.bal||"").trim();
   const[s,c,v]=dn?["Balancing","st-bal","ผ่านแล้ว"]:cd&&cd!=="ผ่าน"?["Test charge/discharge","st-test",cd]:["Balancing","st-bal",bal||"รอดำเนินการ"];
-  return `<a href="#/pack/${r.sk}"><b>${r.sk}</b><span>ถอดจาก ${esc(r.from)} pack ${r.fromPack}</span><span><span class="${c}">${s}</span> <span class="${dn?"ok":tc(v)}">${esc(v)}</span></span></a>`};
+  return `<a href="#/pack/${r.sk}"><b>${r.sk}</b><span>ถอดจาก ${esc(r.from)} pack ${r.fromPack}</span><span><span class="${dn?"ok":tc(v)}">${esc(v)}</span> <span class="${c}">${s}</span></span></a>`};
  const prog=wait.filter(r=>r.bal!=="ผ่าน"),done=wait.filter(r=>r.bal==="ผ่าน");
  const todo=wait.length?`<div class="two"><section><h3>กำลังดำเนินการ (${prog.length})</h3><div class="todo">${prog.map(row).join("")||'<p class="mute pad">ไม่มีรายการค้าง</p>'}</div></section>
  <section><h3>เสร็จแล้ว รอติดตั้ง (${done.length})</h3><div class="todo">${done.map(row).join("")||'<p class="mute pad">ยังไม่มีแพคที่ผ่าน balancing</p>'}</div></section></div>`:"";
