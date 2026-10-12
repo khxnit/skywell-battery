@@ -40,7 +40,7 @@ h3{font-size:1rem;margin:26px 0 8px;font-weight:600}
 .strip i{height:22px;border-radius:2px;background:var(--ok)}
 .strip i.wip{background:var(--wip)}
 .strip i.empty,.slot.empty{background:repeating-linear-gradient(135deg,transparent 0 4px,var(--line) 4px 6px);border:1px dashed var(--bad)}
-.strip i.sk{box-shadow:inset 0 -6px 0 var(--sk)}
+.strip i.sk{background:#f29a3d}
 .truck{color:var(--ok);flex:none}
 .car.wip .truck,.hd.wip .truck{color:var(--wip)}
 .who{display:flex;align-items:center;gap:10px;white-space:nowrap}
@@ -101,6 +101,14 @@ a:hover .pk .f{stroke-width:3.4}
 .pk .n3{font-size:17px;font-weight:700}.pk .s3{font-size:11px;font-weight:600}
 .pill{fill:#fff;stroke:var(--sk);stroke-width:1.2}
 .pk .pt{font-size:11.5px;font-weight:700;fill:#0f3d73}
+.bx .f{stroke:#1d1d1d;stroke-width:1.5;stroke-linejoin:round}
+.bx.u .t{fill:#a6e3c2}.bx.u .F{fill:#62c295}.bx.u .E{fill:#3f9e72}
+.bx.k .t{fill:#ffd1a1}.bx.k .F{fill:#f6a54f}.bx.k .E{fill:#dc8426}
+.bx.e .f{fill:rgba(180,64,47,.08);stroke:var(--bad);stroke-dasharray:7 5}
+.bx text{fill:#111;pointer-events:none;dominant-baseline:central}
+.bx .bn{font-size:40px;font-weight:600;text-anchor:middle}.bx .bt{font-size:15px;font-weight:600}
+.bx.e text{fill:var(--bad)}
+a:hover .bx .f{stroke-width:3}
 .legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.85rem;color:var(--mute);margin:12px 0 0}
 .legend i{display:inline-block;width:12px;height:12px;border-radius:2px;vertical-align:-1px;margin-right:5px}
 .todo{background:var(--card);border:1px solid var(--line);border-radius:8px}
@@ -173,81 +181,42 @@ function slots(){
  const key=e=>D.undated?e.r.n:e.d;
  ev.sort((a,b)=>(key(a)<key(b)?-1:key(a)>key(b)?1:0)||a.t-b.t||a.r.sk.localeCompare(b.r.sk));
  ev.forEach(e=>{const r=e.r,c=e.t===0?r.from:r.to,p=(e.t===0?r.fromPack:r.toPack)-1;if(S[c]&&p>=0&&p<12)S[c][p]=e.t===0?null:r.sk;});
+ D.cars.forEach(c=>S[c]&&S[c].forEach((x,i)=>{const k=D.inst&&D.inst[c]&&D.inst[c][i];if(x==="เดิม"&&k)S[c][i]=k}));
  return S;
 }
 const last=sk=>D.rounds.filter(r=>r.sk===sk).sort((a,b)=>a.n-b.n).pop();
 const sks=()=>[...new Set(D.rounds.map(r=>r.sk))].sort();
 const isWip=(c,i)=>(D.wip[c]||[]).includes(i+1);
-const cls=(c,i,x)=>x===null?"empty":(isWip(c,i)?"wip":"ok")+(x!=="เดิม"?" sk":"");
+const cls=(c,i,x)=>x===null?"empty":x!=="เดิม"?"sk":"ok";
 const carState=(S,c)=>S[c].some((x,i)=>x===null||isWip(c,i))?"wip":"ok";
 const stText=s=>s==="ok"?"ปกติ":"กำลังดำเนินการ";
 
 const truck=(w=46)=>`<svg class="truck" width="${w}" height="${Math.round(w/2)}" viewBox="0 0 64 32" role="img" aria-label="รถดั๊ม"><path d="M3 5h33l-3 17H3z" fill="currentColor"/><path d="M38 10h11l7 8v4H38z" fill="currentColor"/><path d="M42 13h6l4 5h-10z" fill="var(--card)"/><rect x="2" y="22" width="55" height="3" rx="1" fill="currentColor"/><g fill="var(--ink)"><circle cx="11" cy="26" r="5"/><circle cx="24" cy="26" r="5"/><circle cx="48" cy="26" r="5"/></g><g fill="var(--card)"><circle cx="11" cy="26" r="1.8"/><circle cx="24" cy="26" r="1.8"/><circle cx="48" cy="26" r="1.8"/></g></svg>`;
-/* ผังตำแหน่งแพคบนรถดั๊ม (มองจากด้านบน หน้ารถอยู่ด้านบนของภาพ)
-   5-8 = ด้านซ้ายระหว่างล้อหน้า-หลัง, 9-12 = ด้านขวา, 1-4 = หลังหัวเก๋งใกล้กระบอกยก
-   ลำดับในแต่ละกลุ่มปรับได้ที่ 3 บรรทัดนี้ (เรียงจากหน้ารถไปท้ายรถ) */
-const ORDER={left:[5,6,7,8],right:[9,10,11,12],back:[4,2,3,1]};
-function planSVG(id,S){
- const pk=[];
- ORDER.left.forEach((n,i)=>pk.push({n,x:62,y:148+i*56,w:56,h:50}));
- ORDER.right.forEach((n,i)=>pk.push({n,x:242,y:148+i*56,w:56,h:50}));
- ORDER.back.forEach((n,i)=>pk.push({n,x:124+(i%2)*60,y:148+Math.floor(i/2)*44,w:52,h:36}));
- const outline=`<g class="tk"><rect x="84" y="16" width="192" height="92" rx="16"/><path d="M100 36h160"/><rect x="70" y="124" width="220" height="398" rx="8" class="d"/>
-  <rect x="34" y="46" width="22" height="52" rx="4"/><rect x="304" y="46" width="22" height="52" rx="4"/>
-  <rect x="26" y="392" width="14" height="74" rx="4"/><rect x="42" y="392" width="14" height="74" rx="4"/><rect x="304" y="392" width="14" height="74" rx="4"/><rect x="320" y="392" width="14" height="74" rx="4"/>
-  <path d="M56 72h248M56 429h248" class="d"/><rect x="170" y="236" width="20" height="58" rx="5"/></g>
-  <g class="tl"><text x="180" y="92">หัวเก๋ง (หน้ารถ)</text><text x="90" y="140">ด้านซ้าย</text><text x="270" y="140">ด้านขวา</text><text x="180" y="140">หลังหัวเก๋ง</text><text x="180" y="310">กระบอกยกดั๊ม</text></g>`;
- const cells=pk.map(b=>{
-  const v=S[id][b.n-1],st=v===null?"empty":isWip(id,b.n-1)?"wip":"ok",sk=!!v&&v!=="เดิม",lab=v===null?"ว่าง":sk?v:"เดิม",cx=b.x+b.w/2,cy=b.y+b.h/2;
-  const g=`<g class="pk ${st}${sk?" sk":""}"><title>pack ${b.n}: ${v===null?"ว่าง (ถอดออกแล้ว)":lab}${st==="wip"?" (กำลังดำเนินการ)":""}</title><rect class="f" x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}" rx="6"/><text class="n" x="${cx}" y="${cy-1}">${b.n}</text><text class="s" x="${cx}" y="${cy+13}">${lab}</text></g>`;
-  return sk?`<a href="#/pack/${v}">${g}</a>`:g}).join("");
- return `<svg viewBox="0 0 360 540" role="group" aria-label="ผังแพคบนรถ ${id}">${outline}${cells}</svg>`}
-/* มุม 3 มิติ: มองจากท้ายรถด้านซ้ายลงมา (หน้ารถอยู่ซ้ายบน เหมือนภาพตัวอย่าง) หน่วยเป็นเมตร
-   a = ระยะจากท้ายรถไปหน้ารถ, b = ระยะจากด้านซ้ายของรถไปด้านขวา, z = ความสูง
-   แพคจริงขนาด 630 x 1100 x 250 มม. ก้อน 5 และ 9 วางซ้อนข้างบนและวางขวางกับก้อนล่าง */
-function iso3d(id,S){
- const s=80,CX=.848,SY=.53,SP=.6,ZZ=.8,P=(a,b,z)=>[(b*SY-a*CX)*s,-(a*SY+b*CX)*SP*s-z*ZZ*s],f=n=>n.toFixed(1),pts=q=>q.map(p=>f(p[0])+","+f(p[1])).join(" "),all=[];
- const pl=(q,c)=>{all.push(...q);return `<polyline ${c?`class="${c}" `:""}points="${pts(q)}"/>`},cl=(q,c)=>pl([...q,q[0]],c);
- const fc=(a0,a1,b0,b1,z0,z1)=>({T:[P(a0,b0,z1),P(a1,b0,z1),P(a1,b1,z1),P(a0,b1,z1)],L:[P(a0,b0,z0),P(a1,b0,z0),P(a1,b0,z1),P(a0,b0,z1)],R:[P(a0,b0,z0),P(a0,b1,z0),P(a0,b1,z1),P(a0,b0,z1)]});
- const circ=(a,b,r,zc)=>{const q=[];for(let i=0;i<=28;i++){const t=i/28*6.2832;q.push(P(a+r*Math.cos(t),b,zc+r*Math.sin(t)))}return q};
- const tire=(a,b,r,rim)=>{let o=pl(circ(a,b-.17,r,.65))+pl(circ(a,b+.17,r,.65));
-  o+=pl([P(a,b-.17,.65+r),P(a,b+.17,.65+r)])+pl([P(a,b-.17,.65-r),P(a,b+.17,.65-r)]);
-  if(rim)o+=pl(circ(a,b-.17,r*.55,.65))+pl(circ(a,b-.17,r*.2,.65));return o};
- let o=`<polygon class="gd" points="${pts([P(-1.4,-1.4,0),P(9.6,-1.4,0),P(9.6,4.6,0),P(-1.4,4.6,0)])}"/><g class="tk">`;
- all.push(P(-1.4,-1.4,0),P(9.6,-1.4,0),P(9.6,4.6,0),P(-1.4,4.6,0));
- [1.1,2.5,6.1].forEach(a=>{o+=pl([P(a,0,.65),P(a,3.2,.65)]);const fr=a>6;
-  (fr?[3.2]:[3,3.4]).forEach(b=>o+=tire(a,b,fr?.62:.65,false));(fr?[0]:[-.2,.2]).forEach(b=>o+=tire(a,b,fr?.62:.65,true))});
- [1.2,2].forEach(b=>o+=pl([P(-.2,b,1),P(8.2,b,1)]));
- const cab=fc(7.2,8.3,.5,2.7,1,3);o+=cl(cab.T)+cl(cab.L)+cl(cab.R);
- o+=cl([P(-.4,-.15,1.9),P(6.3,-.15,1.9),P(6.3,-.15,3.4),P(-.4,-.15,3.4)])+cl([P(-.4,-.15,1.9),P(-.4,3.35,1.9),P(-.4,3.35,3.4),P(-.4,-.15,3.4)]);
- o+=cl([P(-.4,-.15,3.4),P(6.3,-.15,3.4),P(6.3,3.35,3.4),P(-.4,3.35,3.4)],"d")+cl([P(-.4,-.15,1.9),P(6.3,-.15,1.9),P(6.3,3.35,1.9),P(-.4,3.35,1.9)],"d")+cl([P(6.3,-.1,3.7),P(8.4,-.1,3.7),P(8.4,3.3,3.7),P(6.3,3.3,3.7)],"d");
- [.7,1.8,2.9,4,5.1].forEach(a=>o+=pl([P(a,-.15,1.9),P(a,-.15,3.4)],"rb"));
- o+=pl([P(5.5,1.6,1),P(4.9,1.6,2)],"cy")+"</g>";
- const lt=[[8.9,1.6,2,"หน้ารถ"],[-1,1.6,1.2,"ท้ายรถ"],[5,-1.1,0,"ด้านซ้ายของรถ"],[7.6,4.7,0,"ด้านขวา"]].map(([a,b,z,t])=>{const q=P(a,b,z);all.push(q);return `<text x="${f(q[0])}" y="${f(q[1])}">${t}</text>`}).join("");
- o+=`<g class="tl">${lt}</g>`;
- const PK=[],zb=1,AL=.63,BW=1.1,H=.25;
- [[4,6.45,.4],[2,6.45,1.7],[3,5.75,.4],[1,5.75,1.7]].forEach(([n,a0,b0])=>PK.push({n,a0,a1:a0+AL,b0,b1:b0+BW,z0:zb,z1:zb+H,g:0,ord:a0*10+b0,kind:"slab"}));
- [{b0:1.8,top:9,bot:[12,11,10],g:1,dx:34,dy:-32,tdx:-40,tdy:-44},{b0:.3,top:5,bot:[8,7,6],g:2,dx:-34,dy:32,tdx:0,tdy:-46}].forEach(sd=>{
-  sd.bot.forEach((n,i)=>{const a0=3.5+i*.7;PK.push({n,a0,a1:a0+AL,b0:sd.b0,b1:sd.b0+BW,z0:zb,z1:zb+H,g:sd.g,ord:i,kind:"tall",dx:sd.dx,dy:sd.dy})});
-  PK.push({n:sd.top,a0:3.965,a1:5.065,b0:sd.b0+.235,b1:sd.b0+.865,z0:zb+H,z1:zb+2*H,g:sd.g,ord:99,kind:"top",dx:sd.tdx,dy:sd.tdy})});
- PK.sort((x,y)=>x.g-y.g||(x.kind==="top")-(y.kind==="top")||y.ord-x.ord);
- let ov="";
- PK.forEach(pk=>{
-  const v=S[id][pk.n-1],st=v===null?"empty":isWip(id,pk.n-1)?"wip":"ok",sk=!!v&&v!=="เดิม",F=fc(pk.a0,pk.a1,pk.b0,pk.b1,pk.z0,pk.z1);
-  all.push(...F.T,...F.L,...F.R);
-  const cls=`pk ${st}${sk?" sk":""}`,g=`<g class="${cls}"><title>pack ${pk.n}: ${v===null?"ว่าง (ถอดออกแล้ว)":sk?v:"แพคเดิม"}${st==="wip"?" (กำลังดำเนินการ)":""}</title><polygon class="f r" points="${pts(F.R)}"/><polygon class="f l" points="${pts(F.L)}"/><polygon class="f t" points="${pts(F.T)}"/></g>`;
-  o+=sk?`<a href="#/pack/${v}">${g}</a>`:g;
-  const[ax,ay]=P((pk.a0+pk.a1)/2,(pk.b0+pk.b1)/2,pk.z1),x=ax+(pk.dx||0),y=ay+(pk.dy||0);all.push([x-26,y-18],[x+26,y+32]);
-  const tag=sk?`<rect class="pill" x="${f(x-24)}" y="${f(y+16)}" width="48" height="15" rx="4"/><text class="pt" x="${f(x)}" y="${f(y+27)}">${v}</text>`:v===null?`<text class="s3" x="${f(x)}" y="${f(y+28)}">ว่าง</text>`:"";
-  const pin=`<g class="${cls}">${pk.dx||pk.dy?`<line class="ld" x1="${f(ax)}" y1="${f(ay)}" x2="${f(x)}" y2="${f(y)}"/><circle class="ld" cx="${f(ax)}" cy="${f(ay)}" r="2.6"/>`:""}<circle class="pc" cx="${f(x)}" cy="${f(y)}" r="13.5"/><text class="pn" x="${f(x)}" y="${f(y+5.2)}">${pk.n}</text>${tag}</g>`;
-  ov+=sk?`<a href="#/pack/${v}">${pin}</a>`:pin});
- o+=ov;
- const xs=all.map(q=>q[0]),ys=all.map(q=>q[1]),x0=Math.min(...xs)-16,y0=Math.min(...ys)-16;
- return `<svg viewBox="${f(x0)} ${f(y0)} ${f(Math.max(...xs)-x0+16)} ${f(Math.max(...ys)-y0+16)}" role="group" aria-label="ผังแพคบนรถ ${id} มุม 3 มิติ">${o}</svg>`}
-function setV(b,m){const w=b.closest(".vw");w.dataset.v=m;w.querySelectorAll(".bt").forEach(x=>x.setAttribute("aria-pressed",x.dataset.m===m))}
-const rackView=(id,S)=>`<div class="vw" data-v="3d"><div class="vt"><button class="bt" data-m="3d" aria-pressed="true" onclick="setV(this,'3d')">มุม 3 มิติ</button><button class="bt" data-m="top" aria-pressed="false" onclick="setV(this,'top')">มุมบน</button></div>
-<div class="iso">${iso3d(id,S)}</div><div class="plan">${planSVG(id,S)}</div>
-<p class="mute" style="font-size:.85rem;margin:6px 0 0">มุม 3 มิติมองจากท้ายรถด้านซ้าย แพควาดตามสัดส่วนจริง 630 x 1100 x 250 มม. ส่วนตัวรถเป็นภาพสมมติ ตัวเลขในวงกลมคือเลขแพค ป้ายน้ำเงินคือแพค SK (บนมือถือเลื่อนภาพซ้าย-ขวาได้) ส่วนมุมบนเป็นผังย่อ ไม่แสดงการซ้อน</p></div>`;
+/* ผังตำแหน่งแพค 12 ก้อนตามแบบ (มุม isometric) แพคขนาดจริง 630 x 1100 x 250 มม.
+   ส้ม = ทราบเลข SK, เขียว = ยังไม่ทราบเลข SK (เคยรันเลขแล้วแต่ยังไม่ได้บันทึก), เส้นประแดง = ช่องว่าง
+   o = จุดอ้างอิงบนภาพ, u/v/z = ตำแหน่งแพค (มม.), rot = วางขวาง */
+const PH=250,GROUPS=[
+ {o:[461,791],p:[{n:12,u:0,v:0,z:0},{n:11,u:0,v:787,z:0},{n:10,u:0,v:1575,z:0},{n:9,u:240,v:650,z:250,rot:1}]},
+ {o:[861,993],p:[{n:8,u:0,v:0,z:0},{n:7,u:0,v:787,z:0},{n:6,u:0,v:1575,z:0},{n:5,u:0,v:650,z:250,rot:1}]},
+ {o:[1142,405],p:[{n:3,u:0,v:0,z:0,big:["F",.64],tag:["F",.04,.5,"start"]},{n:4,u:0,v:0,z:250,big:["F",.64],tag:["F",.04,.5,"start"]},{n:1,u:1124,v:0,z:0,big:["F",.5],tag:["E",.5]},{n:2,u:1124,v:0,z:250,big:["F",.5],tag:["E",.5]}]}];
+function rackSVG(id,S){
+ const pt=(o,u,v,z)=>[o[0]+(u+v)*.193,o[1]+(u-v)*.0966-z*.268],f=n=>n.toFixed(1),ps=q=>q.map(p=>f(p[0])+","+f(p[1])).join(" "),all=[];let out="";
+ GROUPS.forEach(g=>{const o=g.o;
+  [...g.p].sort((a,b)=>(a.rot||0)-(b.rot||0)||b.v-a.v||a.u-b.u||a.z-b.z).forEach(k=>{
+   const du=k.rot?630:1100,dv=k.rot?1100:630,{u,v,z}=k,Z=z+PH,
+    T=[pt(o,u,v,Z),pt(o,u+du,v,Z),pt(o,u+du,v+dv,Z),pt(o,u,v+dv,Z)],
+    F=[pt(o,u,v,z),pt(o,u+du,v,z),pt(o,u+du,v,Z),pt(o,u,v,Z)],
+    E=[pt(o,u+du,v,z),pt(o,u+du,v+dv,z),pt(o,u+du,v+dv,Z),pt(o,u+du,v,Z)];
+   all.push(...T,...F,...E);
+   const val=S[id][k.n-1],st=val===null?"e":val==="เดิม"?"u":"k";
+   const lp=sp=>{const[fc,fh,fv,,dz=0]=sp,zz=z+PH/2+dz*PH;return fc==="F"?pt(o,u+fh*du,v,zz):fc==="E"?pt(o,u+du,v+fh*dv,zz):pt(o,u+fh*du,v+(fv??.5)*dv,Z)};
+   const bp=lp(k.big||["E",.5,.5,"middle",-.17]),tp=lp(k.tag||["E",.5,.5,"middle",.31]),anc=(k.tag&&k.tag[3])||"middle";
+   const tx=st==="k"?val:st==="u"?"ไม่ทราบ SK":"ว่าง";
+   const g1=`<g class="bx ${st}"><title>pack ${k.n}: ${st==="e"?"ว่าง (ถอดออกแล้ว)":st==="k"?val:"ยังไม่ทราบเลข SK"}</title><polygon class="f t" points="${ps(T)}"/><polygon class="f F" points="${ps(F)}"/><polygon class="f E" points="${ps(E)}"/><text class="bn" x="${f(bp[0])}" y="${f(bp[1])}">${k.n}</text><text class="bt" x="${f(tp[0])}" y="${f(tp[1])}" style="text-anchor:${anc}">${tx}</text></g>`;
+   out+=st==="k"?`<a href="#/pack/${val}">${g1}</a>`:g1})});
+ const xs=all.map(q=>q[0]),ys=all.map(q=>q[1]),x0=Math.min(...xs)-24,y0=Math.min(...ys)-24;
+ return `<svg viewBox="${f(x0)} ${f(y0)} ${f(Math.max(...xs)-x0+24)} ${f(Math.max(...ys)-y0+24)}" role="group" aria-label="ตำแหน่งแพค 12 ก้อนของรถ ${id}">${out}</svg>`}
+const rackView=(id,S)=>`<div class="iso">${rackSVG(id,S)}</div>`;
 const V={
 home(){
  const S=slots();let k=0,e=0;
@@ -255,14 +224,14 @@ home(){
   const s=S[c],ee=s.filter(x=>x===null).length,kk=s.filter(x=>x&&x!=="เดิม").length,st=carState(S,c);k+=kk;e+=ee;
   return `<a class="car ${st}" href="#/car/${c}"><div class="ch"><span class="who">${truck()}<b>${c}</b></span><span class="chip ${st}">${stText(st)}</span></div>
   <div class="strip" aria-hidden="true">${s.map((x,i)=>`<i class="${cls(c,i,x)}"></i>`).join("")}</div>
-  <div class="cf">${kk?`ใช้แพค SK ${kk} ช่อง`:"แพคเดิมทั้งหมด"}${ee?`, ว่าง ${ee} ช่อง`:""}</div></a>`}).join("");
+  <div class="cf">${kk?`ทราบเลข SK ${kk} ช่อง`:"ยังไม่ทราบเลข SK"}${ee?`, ว่าง ${ee} ช่อง`:""}</div></a>`}).join("");
  const wait=sks().map(last).filter(r=>!r.to);
  const row=r=>{const p=[];if(r.cd!=="ผ่าน")p.push("ทดสอบ: "+(r.cd||"ยังไม่ระบุ"));if(r.bal!=="ผ่าน")p.push("balancing: "+(r.bal||"ยังไม่ระบุ"));
   return `<a href="#/pack/${r.sk}"><b>${r.sk}</b><span>ถอดจาก ${r.from} pack ${r.fromPack}</span><span class="${p.length?"wipc":"ok"}">${p.length?p.join(", "):"พร้อมติดตั้ง"}</span></a>`};
  const prog=wait.filter(r=>r.bal!=="ผ่าน"),done=wait.filter(r=>r.bal==="ผ่าน");
  const todo=wait.length?`<div class="two"><section><h3>กำลังดำเนินการ (${prog.length})</h3><div class="todo">${prog.map(row).join("")||'<p class="mute pad">ไม่มีรายการค้าง</p>'}</div></section>
  <section><h3>เสร็จแล้ว รอติดตั้ง (${done.length})</h3><div class="todo">${done.map(row).join("")||'<p class="mute pad">ยังไม่มีแพคที่ผ่าน balancing</p>'}</div></section></div>`:"";
- return `<h2>ภาพรวมฟลีต</h2><p class="sub">${D.cars.length} คัน, ใช้แพค SK ${k} ช่อง, ช่องว่าง ${e} ช่อง, แพค SK รอติดตั้ง ${wait.length} แพค</p>
+ return `<h2>ภาพรวมฟลีต</h2><p class="sub">${D.cars.length} คัน, ทราบเลข SK ${k} ช่อง, ช่องว่าง ${e} ช่อง, แพค SK รอติดตั้ง ${wait.length} แพค</p>
  <div class="grid">${cards}</div>${legend()}${todo}`;
 },
 car(id){
@@ -280,7 +249,8 @@ car(id){
  <h3>ประวัติของคันนี้</h3>${log.length?`<ul class="log">${log.map(l=>`<li><span class="mute">${fd(l.d)}</span> &nbsp;${l.h}</li>`).join("")}</ul>`:'<p class="mute">ยังไม่เคยถอดหรือเปลี่ยนแพค</p>'}</div></div>`;
 },
 pack(sk){
- const rs=D.rounds.filter(r=>r.sk===sk).sort((a,b)=>b.n-a.n);if(!rs.length)return V.nf();
+ const rs=D.rounds.filter(r=>r.sk===sk).sort((a,b)=>b.n-a.n);if(!rs.length){const S=slots();let at=null;D.cars.forEach(c=>S[c].forEach((x,i)=>{if(x===sk)at=[c,i+1]}));if(!at)return V.nf();
+  return `<div class="crumb"><a href="#/packs">แพค SK ทั้งหมด</a> / ${sk}</div><h2>${sk}</h2><p class="sub">ตอนนี้: ติดตั้งอยู่ที่ <a href="#/car/${at[0]}">${at[0]}</a> pack ${at[1]}</p><p class="mute">ยังไม่มีประวัติการถอดหรือทดสอบในหน้า 2 (จะมีเมื่อแพคนี้ถูกถอดลงมา)</p>`}
  const l=rs[0],where=l.to?`ติดตั้งอยู่ที่ <a href="#/car/${l.to}">${l.to}</a> pack ${l.toPack}`:"อยู่นอกรถ รอติดตั้ง";
  return `<div class="crumb"><a href="#/packs">แพค SK ทั้งหมด</a> / ${sk}</div><h2>${sk}</h2><p class="sub">ตอนนี้: ${where}</p>`+rs.map(r=>{
   const u=r.cd==="ผ่าน"?"":" unc";
@@ -299,7 +269,7 @@ packs(f){
 },
 nf(){return `<h2>ไม่พบข้อมูล</h2><p class="sub">ลองกลับไปที่ <a href="#/">หน้าฟลีต</a> หรือค้นหาเลข SK ด้านบน</p>`}
 };
-const legend=()=>`<p class="legend"><span><i style="background:var(--ok)"></i>ปกติ</span><span><i style="background:var(--wip)"></i>กำลังดำเนินการ</span><span><i style="background:var(--sk)"></i>เป็นแพค SK (ถอดมาแล้วติดตั้งกลับ)</span><span><i style="border:1px dashed var(--bad)"></i>ช่องว่าง</span></p>`;
+const legend=()=>`<p class="legend"><span><i style="background:#f29a3d"></i>ทราบเลข SK แล้ว</span><span><i style="background:var(--ok)"></i>ยังไม่ทราบเลข SK (เคยรันเลขแล้ว แต่ยังไม่ได้บันทึก)</span><span><i style="border:1px dashed var(--bad)"></i>ช่องว่าง (ถอดออกแล้ว)</span></p>`;
 
 function route(){
  const [p,a]=location.hash.replace(/^#\/?/,"").split("/").slice(0,2);
@@ -314,7 +284,7 @@ function route(){
 $("#sklist").innerHTML=sks().map(s=>`<option value="${s}">`).join("");
 $("#q").addEventListener("keydown",e=>{if(e.key!=="Enter")return;
  const v=e.target.value.trim().toUpperCase().replace(/^SK-?(\d+)$/,(m,d)=>"SK-"+d.padStart(2,"0"));
- location.hash=sks().includes(v)?"#/pack/"+v:"#/packs";e.target.value="";});
+ location.hash=/^SK-\d+$/.test(v)?"#/pack/"+v:"#/packs";e.target.value="";});
 /* ---- โหลดข้อมูลจาก Google Sheets ----
    วาง ID ของชีตระหว่าง "" ด้านล่าง (ข้อความยาวใน URL ระหว่าง /d/ กับ /edit)
    ชีตต้องตั้ง Share เป็น "Anyone with the link: Viewer" และชื่อแท็บตรงกับ TABS ด้านล่าง
@@ -352,16 +322,18 @@ function parsePacks(rows){
    to:o.to||"",toPack:num(o.toPack),toDate:iso(o.toDate),toMeter:num(o.toMeter),link:o.link||""})}});
  return out}
 /* อ่านหน้า 1: แถวที่คอลัมน์ B เป็นเลขรถ แล้วคอลัมน์ C-N คือสถานะ Pack 1-12 */
-function parseStatus(rows){const cars=[],wip={};
- rows.forEach(r=>{const c=(r[1]||"").trim();if(/^\d{2}-\d+$/.test(c)){cars.push(c);r.slice(2,14).forEach((s,i)=>{if(/กำลัง/.test(s||""))(wip[c]=wip[c]||[]).push(i+1)})}});
- return{cars,wip}}
+function parseStatus(rows){const cars=[],wip={},inst={};let cur="";
+ rows.forEach(r=>{const c=(r[1]||"").trim();
+  if(/^\d{2}-\d+$/.test(c)){cur=c;cars.push(c);r.slice(2,14).forEach((s,i)=>{if(/กำลัง/.test(s||""))(wip[c]=wip[c]||[]).push(i+1)})}
+  else if(cur&&c.startsWith("ติดตั้งบนรถ"))r.slice(2,14).forEach((s,i)=>{const m=(s||"").match(/SK-?(\d+)/i);if(m)(inst[cur]=inst[cur]||{})[i]="SK-"+m[1].padStart(2,"0")})});
+ return{cars,wip,inst}}
 let loadErr=false;
 async function load(){
  if(!SHEET_ID)return;
  $("#app").innerHTML='<p class="mute">กำลังโหลดข้อมูลจาก Google Sheets…</p>';
  try{
   const [s,p]=await Promise.all([TABS.status,TABS.packs].map(t=>fetch(csvUrl(t)).then(r=>{if(!r.ok)throw new Error(t);return r.text()})));
-  const st=parseStatus(parseCSV(s));D.cars=[...new Set([...D.cars,...st.cars])].sort();D.wip=st.wip;
+  const st=parseStatus(parseCSV(s));D.cars=[...new Set([...D.cars,...st.cars])].sort();D.wip=st.wip;D.inst=st.inst;
   D.rounds=parsePacks(parseCSV(p));
   D.updated=new Date().toISOString().slice(0,10);
  }catch(e){loadErr=true}
