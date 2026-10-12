@@ -9,8 +9,8 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{--ink:#17242d;--mute:#5d6e78;--paper:#eef2f1;--card:#fff;--line:#d3dcdd;--ok:#2c8a5a;--wip:#d38a12;--sk:#1f64a8;--bad:#b4402f;
---okbg:#e2f1e8;--wipbg:#fbefd5}
-@media(prefers-color-scheme:dark){:root{--ink:#e6eef0;--mute:#9fb0b8;--paper:#11191e;--card:#1a252c;--line:#2c3b44;--ok:#4fc28a;--wip:#ecaa3a;--sk:#6bb0ee;--bad:#e8806e;--okbg:#17352a;--wipbg:#3b2f14}}
+--okbg:#e2f1e8;--wipbg:#fbefd5;--wipt:#a86400;--st-test:#1f64a8;--st-bal:#0b7f7f;--wait:#b6406b}
+@media(prefers-color-scheme:dark){:root{--ink:#e6eef0;--mute:#9fb0b8;--paper:#11191e;--card:#1a252c;--line:#2c3b44;--ok:#4fc28a;--wip:#ecaa3a;--sk:#6bb0ee;--bad:#e8806e;--okbg:#17352a;--wipbg:#3b2f14;--wipt:#ecaa3a;--st-test:#6bb0ee;--st-bal:#4cc9c9;--wait:#f08aa8}}
 *{box-sizing:border-box}
 html{scroll-padding-top:70px}
 body{margin:0;background:var(--paper);color:var(--ink);font:400 16px/1.55 "IBM Plex Sans Thai",system-ui,sans-serif}
@@ -131,7 +131,7 @@ th{font-weight:500;color:var(--mute);border-top:0;background:var(--paper)}
 .cols h5{margin:0 0 6px;font-size:.9rem;font-weight:600}
 dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:3px 12px;font-size:.93rem}
 dt{color:var(--mute)}dd{margin:0}
-.ok{color:var(--ok);font-weight:500}.wipc{color:var(--wip);font-weight:500}
+.ok{color:var(--ok);font-weight:500}.wipc{color:var(--wipt);font-weight:500}.wait{color:var(--wait);font-weight:500}.bad{color:var(--bad);font-weight:500}.st-test{color:var(--st-test);font-weight:600}.st-bal{color:var(--st-bal);font-weight:600}
 .unc{color:var(--mute)}
 .log{list-style:none;padding:0;margin:0}
 .log li{padding:8px 0;border-top:1px solid var(--line)}
@@ -170,7 +170,7 @@ const D={
 
 const $=s=>document.querySelector(s), esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const fd=d=>d?d.split("-").reverse().join("/"):"—", fm=m=>m==null||m===""?"—":Number(m).toLocaleString("en");
-const tc=v=>v==="ผ่าน"?"ok":v?"wipc":"mute";
+const tc=v=>v==="ผ่าน"?"ok":v==="กำลังดำเนินการ"?"wipc":v==="รอดำเนินการ"?"wait":v==="ไม่ผ่าน"?"bad":v?"mute":"mute";
 
 /* คำนวณว่าตอนนี้แต่ละช่องมีแพคอะไร จากประวัติการถอด/ติดตั้งทั้งหมด */
 function slots(){
@@ -226,8 +226,10 @@ home(){
   <div class="strip" aria-hidden="true">${s.map((x,i)=>`<i class="${cls(c,i,x)}"></i>`).join("")}</div>
   <div class="cf">${kk?`ทราบเลข SK ${kk} ช่อง`:"ยังไม่ทราบเลข SK"}${ee?`, ว่าง ${ee} ช่อง`:""}</div></a>`}).join("");
  const wait=sks().map(last).filter(r=>!r.to);
- const row=r=>{const p=[];if(r.cd!=="ผ่าน")p.push("ทดสอบ: "+(r.cd||"ยังไม่ระบุ"));if(r.bal!=="ผ่าน")p.push("balancing: "+(r.bal||"ยังไม่ระบุ"));
-  return `<a href="#/pack/${r.sk}"><b>${r.sk}</b><span>ถอดจาก ${r.from} pack ${r.fromPack}</span><span class="${p.length?"wipc":"ok"}">${p.length?p.join(", "):"พร้อมติดตั้ง"}</span></a>`};
+ /* แสดงทีละขั้น: ถ้ามีผล charge/discharge และยังไม่ผ่าน -> แสดงขั้นทดสอบ, ถ้าผ่านแล้วหรือไม่ได้ใส่ -> แสดง Balancing */
+ const row=r=>{const dn=r.bal==="ผ่าน",cd=(r.cd||"").trim(),bal=(r.bal||"").trim();
+  const[s,c,v]=dn?["Balancing","st-bal","ผ่านแล้ว"]:cd&&cd!=="ผ่าน"?["Test charge/discharge","st-test",cd]:["Balancing","st-bal",bal||"รอดำเนินการ"];
+  return `<a href="#/pack/${r.sk}"><b>${r.sk}</b><span>ถอดจาก ${esc(r.from)} pack ${r.fromPack}</span><span><span class="${c}">${s}</span> <span class="${dn?"ok":tc(v)}">${esc(v)}</span></span></a>`};
  const prog=wait.filter(r=>r.bal!=="ผ่าน"),done=wait.filter(r=>r.bal==="ผ่าน");
  const todo=wait.length?`<div class="two"><section><h3>กำลังดำเนินการ (${prog.length})</h3><div class="todo">${prog.map(row).join("")||'<p class="mute pad">ไม่มีรายการค้าง</p>'}</div></section>
  <section><h3>เสร็จแล้ว รอติดตั้ง (${done.length})</h3><div class="todo">${done.map(row).join("")||'<p class="mute pad">ยังไม่มีแพคที่ผ่าน balancing</p>'}</div></section></div>`:"";
