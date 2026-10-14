@@ -257,7 +257,7 @@ pack(sk){
  return `<div class="crumb"><a href="#/packs">แพค SK ทั้งหมด</a> / ${sk}</div><h2>${sk}</h2><p class="sub">ตอนนี้: ${where}</p>`+rs.map(r=>{
   const u=r.cd==="ผ่าน"?"":" unc";
   return `<section class="round"><h4>รอบที่ ${r.n}</h4><div class="cols">
-  <div><h5>ถอดออก</h5><dl><dt>จากรถ</dt><dd><a href="#/car/${r.from}">${r.from}</a>, pack ${r.fromPack}</dd><dt>วันที่</dt><dd>${fd(r.date)}</dd><dt>มิเตอร์</dt><dd>${fm(r.meter)}</dd><dt>อาการ</dt><dd>${esc(r.symptom)||"—"}</dd></dl></div>
+  <div><h5>ถอดออก</h5><dl><dt>จากรถ</dt><dd>${D.cars.includes(r.from)?`<a href="#/car/${r.from}">${esc(r.from)}</a>`:esc(r.from)==="NEW"?"แพคใหม่ (NEW)":esc(r.from)}, pack ${r.fromPack}</dd><dt>วันที่</dt><dd>${fd(r.date)}</dd><dt>มิเตอร์</dt><dd>${fm(r.meter)}</dd><dt>อาการ</dt><dd>${esc(r.symptom)||"—"}</dd></dl></div>
   <div><h5>ทดสอบ</h5><dl><dt>Charge/discharge</dt><dd class="${tc(r.cd)}">${esc(r.cd)||"—"}</dd><dt>SOH</dt><dd class="${u}">${r.soh==null?"รอผล":r.soh+"%"}${u&&r.soh!=null?" (ยังไม่ยืนยัน)":""}</dd><dt>Capacity</dt><dd class="${u}">${r.ah==null?"รอผล":r.ah+" Ah"}</dd><dt>Balancing</dt><dd class="${tc(r.bal)}">${esc(r.bal)||"—"}</dd><dt>ไฟล์</dt><dd>${r.link?`<a href="${esc(r.link)}" target="_blank" rel="noopener">เปิดผลทดสอบ</a>`:'<span class="mute">ยังไม่มีไฟล์</span>'}</dd></dl></div>
   <div><h5>ติดตั้งกลับ</h5>${r.to?`<dl><dt>ที่รถ</dt><dd><a href="#/car/${r.to}">${r.to}</a>, pack ${r.toPack}</dd><dt>วันที่</dt><dd>${fd(r.toDate)}</dd><dt>มิเตอร์</dt><dd>${fm(r.toMeter)}</dd></dl>`:'<p class="mute" style="margin:0">ยังไม่ได้ติดตั้ง</p>'}</div>
   </div></section>`}).join("");
@@ -300,9 +300,10 @@ function parseCSV(t){const rows=[];let r=[],c="",q=false;
   else if(ch==='"')q=true;else if(ch===","){r.push(c);c=""}
   else if(ch==="\n"||ch==="\r"){if(ch==="\r"&&t[i+1]==="\n")i++;r.push(c);rows.push(r);r=[];c=""}else c+=ch}
  if(c||r.length){r.push(c);rows.push(r)}return rows}
+const by=y=>+y>2400?+y-543:+y;   // ปี พ.ศ. (เช่น 2569) แปลงเป็น ค.ศ.
 const iso=s=>{s=(s||"").trim();let m;
- if(m=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/))return`${m[1]}-${m[2].padStart(2,"0")}-${m[3].padStart(2,"0")}`;
- if(m=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/))return`${m[3]}-${m[2].padStart(2,"0")}-${m[1].padStart(2,"0")}`;return null};
+ if(m=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/))return`${by(m[1])}-${m[2].padStart(2,"0")}-${m[3].padStart(2,"0")}`;
+ if(m=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/))return`${by(m[3])}-${m[2].padStart(2,"0")}-${m[1].padStart(2,"0")}`;return null};
 const num=s=>{const m=String(s??"").replace(/,/g,"").match(/-?\d+(\.\d+)?/);return m?Number(m[0]):null};
 const pct=s=>{const v=num(s);return v!=null&&v>0&&v<=1?Math.round(v*1000)/10:v};
 /* อ่านหน้า 2: คอลัมน์ละ 1 SK, รอบที่ 1, 2, 3 เรียงลงมาเป็นบล็อก (รอบที่ไม่มีข้อมูล "มาจาก" จะถูกข้าม)
