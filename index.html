@@ -115,7 +115,8 @@ a:hover .bx .f{stroke-width:3}
 .todo a{display:flex;flex-wrap:wrap;gap:4px 14px;padding:10px 14px;text-decoration:none;border-top:1px solid var(--line)}
 .todo a:first-child{border-top:0}
 .todo a:hover{background:var(--paper)}
-.todo b{color:var(--sk);min-width:56px}
+.todo b{color:var(--sk);min-width:56px}.todo b.rc{color:var(--ink);font-size:1.08rem;min-width:66px}
+.sy{font-size:.8rem;padding:0 9px;border-radius:99px;background:var(--paper);color:var(--mute)}.sy.in{background:rgba(180,64,47,.13);color:var(--bad);font-weight:500}
 table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:8px;overflow:hidden}
 th,td{text-align:left;padding:9px 12px;border-top:1px solid var(--line);font-size:.95rem}
 th{font-weight:500;color:var(--mute);border-top:0;background:var(--paper)}
@@ -225,15 +226,15 @@ home(){
   return `<a class="car ${st}" href="#/car/${c}"><div class="ch"><span class="who">${truck()}<b>${c}</b></span><span class="chip ${st}">${stText(st)}</span></div>
   <div class="strip" aria-hidden="true">${s.map((x,i)=>`<i class="${cls(c,i,x)}"></i>`).join("")}</div>
   <div class="cf">${kk?`ทราบเลข SK ${kk} ช่อง`:"ยังไม่ทราบเลข SK"}${ee?`, ว่าง ${ee} ช่อง`:""}</div></a>`}).join("");
- const wait=sks().map(last).filter(r=>!r.to);
+ const wait=sks().map(last).filter(r=>!r.to).sort((a,b)=>String(a.from).localeCompare(String(b.from))||parseInt(a.sk.slice(3))-parseInt(b.sk.slice(3)));
  /* แสดงทีละขั้น: ถ้ามีผล charge/discharge และยังไม่ผ่าน -> แสดงขั้นทดสอบ, ถ้าผ่านแล้วหรือไม่ได้ใส่ -> แสดง Balancing */
  const row=r=>{const dn=r.bal==="ผ่าน",cd=(r.cd||"").trim(),bal=(r.bal||"").trim();
   const[s,c,v]=dn?["Balancing","st-bal","ผ่านแล้ว"]:cd&&cd!=="ผ่าน"?["Test charge/discharge","st-test",cd]:["Balancing","st-bal",bal||"รอดำเนินการ"];
-  return `<a href="#/pack/${r.sk}"><b>${r.sk}</b><span>ถอดจาก ${esc(r.from)} pack ${r.fromPack}</span><span><span class="${dn?"ok":tc(v)}">${esc(v)}</span> <span class="${c}">${s}</span></span></a>`};
+  return `<a href="#/pack/${r.sk}"><b class="rc">${esc(r.from)}</b><span class="mute">pack ${r.fromPack}</span><b>${r.sk}</b><span><span class="${dn?"ok":tc(v)}">${esc(v)}</span> <span class="${c}">${s}</span></span>${r.symptom?`<span class="sy${/insul/i.test(r.symptom)?" in":""}">${esc(r.symptom)}</span>`:""}</a>`};
  const prog=wait.filter(r=>r.bal!=="ผ่าน"),done=wait.filter(r=>r.bal==="ผ่าน");
  const todo=wait.length?`<div class="two"><section><h3>กำลังดำเนินการ (${prog.length})</h3><div class="todo">${prog.map(row).join("")||'<p class="mute pad">ไม่มีรายการค้าง</p>'}</div></section>
  <section><h3>เสร็จแล้ว รอติดตั้ง (${done.length})</h3><div class="todo">${done.map(row).join("")||'<p class="mute pad">ยังไม่มีแพคที่ผ่าน balancing</p>'}</div></section></div>`:"";
- return `<h2>ภาพรวมฟลีต</h2><p class="sub">${D.cars.length} คัน, ทราบเลข SK ${k} ช่อง, ช่องว่าง ${e} ช่อง, แพค SK รอติดตั้ง ${wait.length} แพค</p>
+ return `<h2>Skywell Truck</h2>
  <div class="grid">${cards}</div>${legend()}${todo}`;
 },
 car(id){
@@ -276,7 +277,6 @@ const legend=()=>`<p class="legend"><span><i style="background:#f29a3d"></i>ท�
 function route(){
  const [p,a]=location.hash.replace(/^#\/?/,"").split("/").slice(0,2);
  $("#app").innerHTML=p==="car"?V.car(a):p==="pack"?V.pack(a):p==="packs"?V.packs(a):V.home();
- if(loadErr)$("#app").insertAdjacentHTML("afterbegin",'<p class="wipc">โหลดข้อมูลจาก Google Sheets ไม่ได้ ตรวจว่าชีตตั้ง Share เป็น Anyone with the link และชื่อแท็บตรงกับ Sheet1 / Sheet2 ตอนนี้แสดงข้อมูลตัวอย่าง</p>');
  slots();
  if(D.undated)$("#app").insertAdjacentHTML("beforeend",'<p class="mute">มีรอบที่ยังไม่ใส่วันที่ ตำแหน่งแพคในแต่ละช่องคำนวณจากลำดับรอบที่แทน ควรกรอกวันที่เพื่อความแม่นยำ</p>');
  $("#app").insertAdjacentHTML("beforeend",`<footer>${SHEET_ID&&!loadErr?"โหลดจาก Google Sheets เมื่อ":"ข้อมูลตัวอย่าง อัปเดต"} ${fd(D.updated)}</footer>`);
