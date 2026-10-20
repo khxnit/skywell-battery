@@ -112,9 +112,13 @@ a:hover .bx .f{stroke-width:3}
 .legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.85rem;color:var(--mute);margin:12px 0 0}
 .legend i{display:inline-block;width:12px;height:12px;border-radius:2px;vertical-align:-1px;margin-right:5px}
 .todo{background:var(--card);border:1px solid var(--line);border-radius:8px}
-.todo a{display:flex;flex-wrap:wrap;gap:4px 14px;padding:10px 14px;text-decoration:none;border-top:1px solid var(--line)}
-.todo a:first-child{border-top:0}
-.todo a:hover{background:var(--paper)}
+.todo .cg{display:flex;gap:16px;padding:10px 14px;border-top:1px solid var(--line)}
+.todo .cg:first-child{border-top:0}
+.todo .rcl{text-decoration:none;min-width:70px}
+.todo .cr{flex:1;display:flex;flex-direction:column}
+.todo .cr a{display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px;padding:6px 8px;margin:0 -8px;border-radius:6px;text-decoration:none}
+.todo .cr a:hover{background:var(--paper)}
+.pn0{min-width:56px}
 .todo b{color:var(--sk);min-width:56px}.todo b.rc{color:var(--ink);font-size:1.08rem;min-width:66px}
 .sy{font-size:.8rem;padding:0 9px;border-radius:99px;background:var(--paper);color:var(--mute)}.sy.in{background:rgba(180,64,47,.13);color:var(--bad);font-weight:500}
 table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:8px;overflow:hidden}
@@ -230,10 +234,12 @@ home(){
  /* แสดงทีละขั้น: ถ้ามีผล charge/discharge และยังไม่ผ่าน -> แสดงขั้นทดสอบ, ถ้าผ่านแล้วหรือไม่ได้ใส่ -> แสดง Balancing */
  const row=r=>{const dn=r.bal==="ผ่าน",cd=(r.cd||"").trim(),bal=(r.bal||"").trim();
   const[s,c,v]=dn?["Balancing","st-bal","ผ่านแล้ว"]:cd&&cd!=="ผ่าน"?["Test charge/discharge","st-test",cd]:["Balancing","st-bal",bal||"รอดำเนินการ"];
-  return `<a href="#/pack/${r.sk}"><b class="rc">${esc(r.from)}</b><span class="mute">pack ${r.fromPack}</span><b>${r.sk}</b><span><span class="${dn?"ok":tc(v)}">${esc(v)}</span> <span class="${c}">${s}</span></span>${r.symptom?`<span class="sy${/insul/i.test(r.symptom)?" in":""}">${esc(r.symptom)}</span>`:""}</a>`};
+  return `<a href="#/pack/${r.sk}"><span class="mute pn0">pack ${r.fromPack}</span><b>${r.sk}</b><span><span class="${dn?"ok":tc(v)}">${esc(v)}</span> <span class="${c}">${s}</span></span>${r.symptom?`<span class="sy${/insul/i.test(r.symptom)?" in":""}">${esc(r.symptom)}</span>`:""}</a>`};
+ const grp=list=>{const m=new Map();list.forEach(r=>{const k=String(r.from);if(!m.has(k))m.set(k,[]);m.get(k).push(r)});
+  return[...m].map(([c,rs])=>`<div class="cg"><a class="rcl" href="#/car/${esc(c)}"><b class="rc">${esc(c)}</b></a><div class="cr">${rs.map(row).join("")}</div></div>`).join("")};
  const prog=wait.filter(r=>r.bal!=="ผ่าน"),done=wait.filter(r=>r.bal==="ผ่าน");
- const todo=wait.length?`<div class="two"><section><h3>กำลังดำเนินการ (${prog.length})</h3><div class="todo">${prog.map(row).join("")||'<p class="mute pad">ไม่มีรายการค้าง</p>'}</div></section>
- <section><h3>เสร็จแล้ว รอติดตั้ง (${done.length})</h3><div class="todo">${done.map(row).join("")||'<p class="mute pad">ยังไม่มีแพคที่ผ่าน balancing</p>'}</div></section></div>`:"";
+ const todo=wait.length?`<div class="two"><section><h3>กำลังดำเนินการ (${prog.length})</h3><div class="todo">${grp(prog)||'<p class="mute pad">ไม่มีรายการค้าง</p>'}</div></section>
+ <section><h3>เสร็จแล้ว รอติดตั้ง (${done.length})</h3><div class="todo">${grp(done)||'<p class="mute pad">ยังไม่มีแพคที่ผ่าน balancing</p>'}</div></section></div>`:"";
  return `<h2>Skywell Truck</h2>
  <div class="grid">${cards}</div>${legend()}${todo}`;
 },
